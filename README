@@ -1,0 +1,9 @@
+Sinatra Flat Text Blog
+----------------------
+
+An attempt to create a simple blog software that can be plugged into an
+existing Sinatra application. Uses flat text files instead of a database, like
+jekyll (http://github.com/mojombo/jekyll) does.
+
+Work in progress and far from being ready for production.
+

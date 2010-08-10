@@ -1,0 +1,56 @@
+require 'YAML'
+
+class Post
+  @@posts_dir = './posts'
+  attr_reader :content
+
+  def initialize(filename)
+    @filename = filename
+    read_yaml
+  end
+
+  def self.all
+    if File.directory?(@@posts_dir)
+      post_filenames = Dir.glob("#{@@posts_dir}/*.textile")
+      post_filenames.map { |filename| Post.new File.join(Dir.getwd, filename) }
+    else
+      []
+    end
+  end
+
+private
+  def read_yaml
+    @content = File.read(@filename)
+
+    if @content =~ /^(---\s*\n.*?\n?)^(---\s*$\n?)/m
+      @content = @content[($1.size + $2.size)..-1]
+      @data = YAML.load($1)
+    end
+    @data ||= {}
+    define_dynamic_methods
+  end
+
+  def define_dynamic_methods
+    @data.each do |method_name, value|
+      value = "'#{value}'" if value.is_a? String
+      instance_eval "def #{method_name}; #{value}; end"
+      if value.is_a? Array
+        by_attribute_method_code = <<-eos
+          posts = self.all
+          #{method_name} = {}
+          posts.each do |post|
+            post.#{method_name}.each do |single_item|
+              if #{method_name}.has_key? single_item
+                #{method_name}[single_item] << post
+              else
+                #{method_name}[single_item] = [post]
+              end
+            end
+          end
+          #{method_name}
+        eos
+        self.class.send(:module_eval, "def self.by_#{method_name}; #{by_attribute_method_code}; end")
+      end
+    end
+  end
+end

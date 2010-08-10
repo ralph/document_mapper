@@ -1,0 +1,8 @@
+---
+id: 1
+title: The shizzle!
+tags: [tag]
+number_of_foos: 42
+---
+
+I like the flowers.
