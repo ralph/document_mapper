@@ -67,5 +67,16 @@ describe Post do
       assert_equal title, post.title
     end
   end
+
+  describe 'when calling a method that was not defined dynamically' do
+    it 'should throw an error on the class level' do
+      assert_raises(NoMethodError) { Post.hululu }
+    end
+
+    it 'should throw an error on the instance level' do
+      post = Post.new('./posts/2010-08-08-test-post.textile')
+      assert_raises(NoMethodError) { post.hululu }
+    end
+  end
 end
 
