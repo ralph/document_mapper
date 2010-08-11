@@ -58,5 +58,14 @@ describe Post do
       assert_equal Set.new([2]), posts['tug'].map(&:id).to_set
     end
   end
+
+  describe 'when finding a post by an attribute' do
+    it 'should find the right post' do
+      Post.all
+      title = 'The shizzle!'
+      post = Post.find_by_title(title)
+      assert_equal title, post.title
+    end
+  end
 end
 

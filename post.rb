@@ -34,23 +34,33 @@ private
     @data.each do |method_name, value|
       value = "'#{value}'" if value.is_a? String
       instance_eval "def #{method_name}; #{value}; end"
+
       if value.is_a? Array
-        by_attribute_method_code = <<-eos
-          posts = self.all
-          #{method_name} = {}
-          posts.each do |post|
-            post.#{method_name}.each do |single_item|
-              if #{method_name}.has_key? single_item
-                #{method_name}[single_item] << post
-              else
-                #{method_name}[single_item] = [post]
+        by_attribute_method = <<-eos
+          def self.by_#{method_name}
+            posts = self.all
+            #{method_name} = {}
+            posts.each do |post|
+              post.#{method_name}.each do |single_item|
+                if #{method_name}.has_key? single_item
+                  #{method_name}[single_item] << post
+                else
+                  #{method_name}[single_item] = [post]
+                end
               end
             end
+            #{method_name}
           end
-          #{method_name}
         eos
-        self.class.send(:module_eval, "def self.by_#{method_name}; #{by_attribute_method_code}; end")
+        self.class.send(:module_eval, by_attribute_method)
       end
+
+      find_by_attribute_method = <<-eos
+        def self.find_by_#{method_name}(attribute)
+          all.detect {|post| post.#{method_name} == attribute}
+        end
+        eos
+      self.class.send(:module_eval, find_by_attribute_method)
     end
   end
 end
