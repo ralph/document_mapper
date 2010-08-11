@@ -2,6 +2,7 @@ require 'YAML'
 
 class Post
   @@posts_dir = './posts'
+  @@dynamic_methods_defined = false
   attr_reader :content
 
   def initialize(filename)
@@ -62,5 +63,11 @@ private
         eos
       self.class.send(:module_eval, find_by_attribute_method)
     end
+    @@dynamic_methods_defined = true
+  end
+
+  def self.method_missing(method_name, *args)
+    self.all unless @@dynamic_methods_defined
+    super
   end
 end
