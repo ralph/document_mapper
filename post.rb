@@ -2,7 +2,7 @@ require 'YAML'
 
 class Post
   @@posts_dir = './posts'
-  @@dynamic_methods_defined = false
+  @@posts = nil
   attr_reader :content
 
   def initialize(filename)
@@ -11,9 +11,10 @@ class Post
   end
 
   def self.all
+    return @@posts if @@posts
     if File.directory?(@@posts_dir)
       post_filenames = Dir.glob("#{@@posts_dir}/*.textile")
-      post_filenames.map { |filename| Post.new File.join(Dir.getwd, filename) }
+      @@posts = post_filenames.map { |filename| Post.new File.join(Dir.getwd, filename) }
     else
       []
     end
@@ -67,7 +68,7 @@ private
   end
 
   def self.method_missing(method_name, *args)
-    self.all unless @@dynamic_methods_defined
+    self.all unless @@posts
     super
   end
 end
