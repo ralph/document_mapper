@@ -1,4 +1,5 @@
 require 'minitest/spec'
+require 'minitest/mock'
 MiniTest::Unit.autorun
 require './post.rb'
 require 'set'
@@ -76,6 +77,38 @@ describe Post do
     it 'should throw an error on the instance level' do
       post = Post.new('./posts/2010-08-08-test-post.textile')
       assert_raises(NoMethodError) { post.hululu }
+    end
+  end
+
+  describe 'when reloading all posts' do
+    it 'should get updated posts' do
+      # TODO
+    end
+
+    it 'should not show deleted posts' do
+      posts_before = Post.all
+
+      # Mock the shizzle!
+      class Dir
+        class << self
+          def glob_with_mocking(something)
+            ['posts/2010-08-09-oink-post.textile']
+          end
+          alias_method :glob_without_mocking, :glob
+          alias_method :glob, :glob_with_mocking
+        end
+      end
+
+      Post.reload!
+      posts_after = Post.all
+      refute_equal posts_before, posts_after
+
+      # Back to original state
+      class Dir
+        class << self
+          alias_method :glob, :glob_without_mocking
+        end
+      end
     end
   end
 end

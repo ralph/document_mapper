@@ -12,6 +12,10 @@ class Post
 
   def self.all
     return @@posts if @@posts
+    self.reload!
+  end
+
+  def self.reload!
     if File.directory?(@@posts_dir)
       post_filenames = Dir.glob("#{@@posts_dir}/*.textile")
       @@posts = post_filenames.map { |filename| Post.new File.join(Dir.getwd, filename) }
