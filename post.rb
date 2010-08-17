@@ -17,11 +17,19 @@ class Post
 
   def self.reload!
     if File.directory?(@@posts_dir)
-      post_filenames = Dir.glob("#{@@posts_dir}/*.textile")
+      post_filenames = Dir.glob("#{@@posts_dir}/*.*")
       @@posts = post_filenames.map { |filename| Post.new File.join(Dir.getwd, filename) }
     else
       []
     end
+  end
+
+  def self.posts_dir
+    @@posts_dir
+  end
+
+  def self.posts_dir=(new_dir)
+    @@posts_dir = new_dir
   end
 
 private

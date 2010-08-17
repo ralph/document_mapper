@@ -1,7 +1,7 @@
 require 'minitest/spec'
 MiniTest::Unit.autorun
 require 'set'
-require 'mocha'
+require 'fileutils'
 require './post.rb'
 
 describe Post do
@@ -81,29 +81,78 @@ describe Post do
   end
 
   describe 'when reloading all posts' do
+    before do
+      @default_dir = './posts'
+      Post.posts_dir = @default_dir
+      Post.reload!
+      @posts_before = Post.all
+      @tmp_dir = "#{@default_dir}-#{Time.now.to_i}-#{rand(999999)}-test"
+      FileUtils.cp_r @default_dir, @tmp_dir
+    end
+
+    after do
+      FileUtils.rm_r(@tmp_dir) if Dir.exist?(@tmp_dir)
+    end
+
     it 'should get updated posts' do
-      # TODO
+      updated_post = <<-eos
+---
+id: 1
+title: The shuzzle!
+tags: [tig]
+number_of_foos: 48
+---
+
+I like the foos.
+eos
+      post_filename = "#{@tmp_dir}/2010-08-08-test-post.textile"
+      File.open(post_filename, 'w') {|f| f.write(updated_post) }
+      Post.posts_dir = @tmp_dir
+      Post.reload!
+      posts_after = Post.all
+
+      assert_equal @posts_before.first.id, posts_after.first.id
+      refute_equal @posts_before.first.title, posts_after.first.title
+      refute_equal @posts_before.first.tags, posts_after.first.tags
+      refute_equal @posts_before.first.number_of_foos, posts_after.first.number_of_foos
+      refute_equal @posts_before.first.content, posts_after.first.content
     end
 
     it 'should get new posts' do
-      # TODO
+      new_post = <<-eos
+---
+id: 3
+title: The shuzzle!
+tags: [tig]
+number_of_foos: 48
+---
+
+I like the cows.
+eos
+      post_filename = "#{@tmp_dir}/2010-08-15-new-test-post.textile"
+      File.open(post_filename, 'w') {|f| f.write(new_post) }
+      Post.posts_dir = @tmp_dir
+      Post.reload!
+      posts_after = Post.all
+
+      assert_equal @posts_before.size + 1, posts_after.size
+      assert_equal 'The shuzzle!', posts_after.last.title
+      assert_equal "I like the cows.\n", posts_after.last.content
     end
 
     it 'should not change if no posts were changed' do
-      posts_before = Post.all
       Post.reload!
       posts_after = Post.all
-      assert_equal posts_before.map(&:id), posts_after.map(&:id)
+      assert_equal @posts_before.map(&:id), posts_after.map(&:id)
     end
 
     it 'should not show deleted posts' do
-      # TODO: somehow affects the other tests, so it is commented out
-      # posts_before = Post.all
-      # Dir.expects(:glob).with('./posts/*.textile').once.returns(['posts/2010-08-09-oink-post.textile'])
-
-      # Post.reload!
-      # posts_after = Post.all
-      # refute_equal posts_before.map(&:id), posts_after.map(&:id)
+      post_filename = "#{@tmp_dir}/2010-08-08-test-post.textile"
+      FileUtils.rm post_filename
+      Post.posts_dir = @tmp_dir
+      Post.reload!
+      posts_after = Post.all
+      refute_equal @posts_before.map(&:id), posts_after.map(&:id)
     end
   end
 end
