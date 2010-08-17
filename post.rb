@@ -3,11 +3,15 @@ require 'yaml'
 class Post
   @@posts_dir = './posts'
   @@posts = nil
-  attr_reader :content
+  attr_reader :content, :file_path
 
-  def initialize(filename)
-    @filename = filename
+  def initialize(file_path)
+    @file_path = file_path
     read_yaml
+  end
+
+  def file_name
+    self.file_path.split('/').last
   end
 
   def self.all
@@ -17,8 +21,8 @@ class Post
 
   def self.reload!
     if File.directory?(@@posts_dir)
-      post_filenames = Dir.glob("#{@@posts_dir}/*.*")
-      @@posts = post_filenames.map { |filename| Post.new File.join(Dir.getwd, filename) }
+      file_paths = Dir.glob("#{@@posts_dir}/*.*")
+      @@posts = file_paths.map { |file_path| Post.new File.join(Dir.getwd, file_path) }
     else
       []
     end
@@ -34,7 +38,7 @@ class Post
 
 private
   def read_yaml
-    @content = File.read(@filename)
+    @content = File.read(@file_path)
 
     if @content =~ /^(---\s*\n.*?\n?)^(---\s*$\n?)/m
       @content = @content[($1.size + $2.size)..-1]

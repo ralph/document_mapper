@@ -62,10 +62,23 @@ describe Post do
 
   describe 'when finding a post by an attribute' do
     it 'should find the right post' do
-      Post.all
       title = 'The shizzle!'
       post = Post.find_by_title(title)
       assert_equal title, post.title
+    end
+  end
+
+  describe 'when getting the file name or file path' do
+    it 'should show the right file name' do
+      post = Post.new './posts/2010-08-08-test-post.textile'
+      file_name = '2010-08-08-test-post.textile'
+      assert_equal file_name, post.file_name
+    end
+
+    it 'should show the right file path' do
+      file_path = './posts/2010-08-08-test-post.textile'
+      post = Post.new file_path
+      assert_equal file_path, post.file_path
     end
   end
 
