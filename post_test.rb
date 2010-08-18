@@ -60,19 +60,37 @@ describe Post do
     end
   end
 
-  describe 'when finding a post by an attribute' do
-    it 'should find the right post' do
+  describe 'when finding a post' do
+    it 'should find the right post by an attribute' do
       title = 'The shizzle!'
       post = Post.find_by_title(title)
       assert_equal title, post.title
+    end
+
+    it 'should find the right post by file_name' do
+      file_name = '2010-08-08-test-post'
+      post = Post.find_by_file_name file_name
+      assert_equal post.file_name, file_name
     end
   end
 
   describe 'when getting the file name or file path' do
     it 'should show the right file name' do
       post = Post.new './posts/2010-08-08-test-post.textile'
-      file_name = '2010-08-08-test-post.textile'
+      file_name = '2010-08-08-test-post'
       assert_equal file_name, post.file_name
+    end
+
+    it 'should show the right file name with extension' do
+      post = Post.new './posts/2010-08-08-test-post.textile'
+      file_name = '2010-08-08-test-post.textile'
+      assert_equal file_name, post.file_name_with_extension
+    end
+
+    it 'should show the right extension' do
+      post = Post.new './posts/2010-08-08-test-post.textile'
+      extension = '.textile'
+      assert_equal extension, post.file_extension
     end
 
     it 'should show the right file path' do
@@ -118,8 +136,8 @@ number_of_foos: 48
 
 I like the foos.
 eos
-      post_filename = "#{@tmp_dir}/2010-08-08-test-post.textile"
-      File.open(post_filename, 'w') {|f| f.write(updated_post) }
+      post_file_name = "#{@tmp_dir}/2010-08-08-test-post.textile"
+      File.open(post_file_name, 'w') {|f| f.write(updated_post) }
       Post.posts_dir = @tmp_dir
       Post.reload!
       posts_after = Post.all
@@ -142,8 +160,8 @@ number_of_foos: 48
 
 I like the cows.
 eos
-      post_filename = "#{@tmp_dir}/2010-08-15-new-test-post.textile"
-      File.open(post_filename, 'w') {|f| f.write(new_post) }
+      post_file_name = "#{@tmp_dir}/2010-08-15-new-test-post.textile"
+      File.open(post_file_name, 'w') {|f| f.write(new_post) }
       Post.posts_dir = @tmp_dir
       Post.reload!
       posts_after = Post.all
@@ -160,8 +178,8 @@ eos
     end
 
     it 'should not show deleted posts' do
-      post_filename = "#{@tmp_dir}/2010-08-08-test-post.textile"
-      FileUtils.rm post_filename
+      post_file_name = "#{@tmp_dir}/2010-08-08-test-post.textile"
+      FileUtils.rm post_file_name
       Post.posts_dir = @tmp_dir
       Post.reload!
       posts_after = Post.all

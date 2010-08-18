@@ -5,13 +5,22 @@ class Post
   @@posts = nil
   attr_reader :content, :file_path
 
-  def initialize(file_path)
-    @file_path = file_path
+  def initialize(new_file_path)
+    @file_path = new_file_path
+    define_attribute_finder('file_name')
     read_yaml
   end
 
   def file_name
+    File.basename file_name_with_extension, file_extension
+  end
+
+  def file_name_with_extension
     self.file_path.split('/').last
+  end
+
+  def file_extension
+    File.extname file_name_with_extension
   end
 
   def self.all
@@ -73,14 +82,18 @@ private
         self.class.send(:module_eval, by_attribute_method)
       end
 
-      find_by_attribute_method = <<-eos
-        def self.find_by_#{method_name}(attribute)
-          all.detect {|post| post.#{method_name} == attribute}
-        end
-        eos
-      self.class.send(:module_eval, find_by_attribute_method)
+      define_attribute_finder(method_name)
     end
     @@dynamic_methods_defined = true
+  end
+
+  def define_attribute_finder(method_name)
+    find_by_attribute_method = <<-eos
+      def self.find_by_#{method_name}(attribute)
+        all.detect {|post| post.#{method_name} == attribute}
+      end
+    eos
+    self.class.send(:module_eval, find_by_attribute_method)
   end
 
   def self.method_missing(method_name, *args)
