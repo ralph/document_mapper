@@ -1,8 +1,8 @@
 require 'yaml'
 
-class Post
-  @@posts_dir = './posts'
-  @@posts = nil
+class DocumentFile
+  @@documents_dir = './documents'
+  @@documents = nil
   attr_reader :content, :file_path
 
   def initialize(new_file_path)
@@ -24,25 +24,25 @@ class Post
   end
 
   def self.all
-    return @@posts if @@posts
+    return @@documents if @@documents
     self.reload!
   end
 
   def self.reload!
-    if File.directory?(@@posts_dir)
-      file_paths = Dir.glob("#{@@posts_dir}/*.*")
-      @@posts = file_paths.map { |file_path| Post.new File.join(Dir.getwd, file_path) }
+    if File.directory?(@@documents_dir)
+      file_paths = Dir.glob("#{@@documents_dir}/*.*")
+      @@documents = file_paths.map { |file_path| self.new File.join(Dir.getwd, file_path) }
     else
       []
     end
   end
 
-  def self.posts_dir
-    @@posts_dir
+  def self.documents_dir
+    @@documents_dir
   end
 
-  def self.posts_dir=(new_dir)
-    @@posts_dir = new_dir
+  def self.documents_dir=(new_dir)
+    @@documents_dir = new_dir
   end
 
 private
@@ -65,14 +65,14 @@ private
       if value.is_a? Array
         by_attribute_method = <<-eos
           def self.by_#{method_name}
-            posts = self.all
+            documents = self.all
             #{method_name} = {}
-            posts.each do |post|
-              post.#{method_name}.each do |single_item|
+            documents.each do |document|
+              document.#{method_name}.each do |single_item|
                 if #{method_name}.has_key? single_item
-                  #{method_name}[single_item] << post
+                  #{method_name}[single_item] << document
                 else
-                  #{method_name}[single_item] = [post]
+                  #{method_name}[single_item] = [document]
                 end
               end
             end
@@ -90,14 +90,14 @@ private
   def define_attribute_finder(method_name)
     find_by_attribute_method = <<-eos
       def self.find_by_#{method_name}(attribute)
-        all.detect {|post| post.#{method_name} == attribute}
+        all.detect {|document| document.#{method_name} == attribute}
       end
     eos
     self.class.send(:module_eval, find_by_attribute_method)
   end
 
   def self.method_missing(method_name, *args)
-    self.all unless @@posts
+    self.all unless @@documents
     super
   end
 end
