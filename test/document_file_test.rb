@@ -9,14 +9,17 @@ $LOAD_PATH.unshift libdir unless $LOAD_PATH.include?(libdir)
 
 require 'document_file'
 
-describe DocumentFile do
+class MyDocument < DocumentFile::Base
+end
+
+describe MyDocument do
   before do
-    DocumentFile.documents_dir = testdir + '/documents'
+    MyDocument.documents_dir = testdir + '/documents'
   end
 
   describe 'when finding all document_files' do
     before do
-      @document_files = DocumentFile.all
+      @document_files = MyDocument.all
     end
 
     it 'should return an Array' do
@@ -28,9 +31,9 @@ describe DocumentFile do
     end
   end
 
-  describe 'when initializing a DocumentFile' do
+  describe 'when initializing a MyDocument' do
     before do
-      @document_file = DocumentFile.new(testdir + '/documents/2010-08-08-test-document-file.textile')
+      @document_file = MyDocument.new(testdir + '/documents/2010-08-08-test-document-file.textile')
     end
 
     it 'should initialize the content' do
@@ -55,15 +58,15 @@ describe DocumentFile do
 
   describe 'when listing document_files by an array attribute' do
     it 'should return a Hash' do
-      assert_equal Hash, DocumentFile.by_tags.class
+      assert_equal Hash, MyDocument.by_tags.class
     end
 
     it 'should use the tags as Hash keys' do
-      assert_equal Set.new(['tag', 'tug']), DocumentFile.by_tags.keys.to_set
+      assert_equal Set.new(['tag', 'tug']), MyDocument.by_tags.keys.to_set
     end
 
     it 'should use the document_files as Hash values' do
-      document_files = DocumentFile.by_tags
+      document_files = MyDocument.by_tags
       assert_equal Set.new([1, 2]), document_files['tag'].map(&:id).to_set
       assert_equal Set.new([2]), document_files['tug'].map(&:id).to_set
     end
@@ -72,50 +75,50 @@ describe DocumentFile do
   describe 'when finding a document_file' do
     it 'should find the right document_file by an attribute' do
       title = 'The shizzle!'
-      document_file = DocumentFile.find_by_title(title)
+      document_file = MyDocument.find_by_title(title)
       assert_equal title, document_file.title
     end
 
     it 'should find the right document_file by file_name' do
       file_name = '2010-08-08-test-document-file'
-      document_file = DocumentFile.find_by_file_name file_name
+      document_file = MyDocument.find_by_file_name file_name
       assert_equal document_file.file_name, file_name
     end
   end
 
   describe 'when getting the file name or file path' do
     it 'should show the right file name' do
-      document_file = DocumentFile.new './test/documents/2010-08-08-test-document-file.textile'
+      document_file = MyDocument.new './test/documents/2010-08-08-test-document-file.textile'
       file_name = '2010-08-08-test-document-file'
       assert_equal file_name, document_file.file_name
     end
 
     it 'should show the right file name with extension' do
-      document_file = DocumentFile.new './test/documents/2010-08-08-test-document-file.textile'
+      document_file = MyDocument.new './test/documents/2010-08-08-test-document-file.textile'
       file_name = '2010-08-08-test-document-file.textile'
       assert_equal file_name, document_file.file_name_with_extension
     end
 
     it 'should show the right extension' do
-      document_file = DocumentFile.new './test/documents/2010-08-08-test-document-file.textile'
+      document_file = MyDocument.new './test/documents/2010-08-08-test-document-file.textile'
       extension = '.textile'
       assert_equal extension, document_file.file_extension
     end
 
     it 'should show the right file path' do
       file_path = './test/documents/2010-08-08-test-document-file.textile'
-      document_file = DocumentFile.new file_path
+      document_file = MyDocument.new file_path
       assert_equal file_path, document_file.file_path
     end
   end
 
   describe 'when calling a method that was not defined dynamically' do
     it 'should throw an error on the class level' do
-      assert_raises(NoMethodError) { DocumentFile.hululu }
+      assert_raises(NoMethodError) { MyDocument.hululu }
     end
 
     it 'should throw an error on the instance level' do
-      document_file = DocumentFile.new('./test/documents/2010-08-08-test-document-file.textile')
+      document_file = MyDocument.new('./test/documents/2010-08-08-test-document-file.textile')
       assert_raises(NoMethodError) { document_file.hululu }
     end
   end
@@ -123,9 +126,9 @@ describe DocumentFile do
   describe 'when reloading all document_files' do
     before do
       @default_dir = testdir + '/documents'
-      DocumentFile.documents_dir = @default_dir
-      DocumentFile.reload!
-      @document_files_before = DocumentFile.all
+      MyDocument.documents_dir = @default_dir
+      MyDocument.reload!
+      @document_files_before = MyDocument.all
       @tmp_dir = "#{@default_dir}-#{Time.now.to_i}-#{rand(999999)}-test"
       FileUtils.cp_r @default_dir, @tmp_dir
     end
@@ -147,9 +150,9 @@ I like the foos.
 eos
       document_file_file_name = "#{@tmp_dir}/2010-08-08-test-document-file.textile"
       File.open(document_file_file_name, 'w') {|f| f.write(updated_document_file) }
-      DocumentFile.documents_dir = @tmp_dir
-      DocumentFile.reload!
-      document_files_after = DocumentFile.all
+      MyDocument.documents_dir = @tmp_dir
+      MyDocument.reload!
+      document_files_after = MyDocument.all
 
       assert_equal @document_files_before.first.id, document_files_after.first.id
       refute_equal @document_files_before.first.title, document_files_after.first.title
@@ -171,9 +174,9 @@ I like the cows.
 eos
       document_file_file_name = "#{@tmp_dir}/2010-08-15-new-test-document_file.textile"
       File.open(document_file_file_name, 'w') {|f| f.write(new_document_file) }
-      DocumentFile.documents_dir = @tmp_dir
-      DocumentFile.reload!
-      document_files_after = DocumentFile.all
+      MyDocument.documents_dir = @tmp_dir
+      MyDocument.reload!
+      document_files_after = MyDocument.all
 
       assert_equal @document_files_before.size + 1, document_files_after.size
       assert_equal 'The shuzzle!', document_files_after.last.title
@@ -181,17 +184,17 @@ eos
     end
 
     it 'should not change if no document_files were changed' do
-      DocumentFile.reload!
-      document_files_after = DocumentFile.all
+      MyDocument.reload!
+      document_files_after = MyDocument.all
       assert_equal @document_files_before.map(&:id), document_files_after.map(&:id)
     end
 
     it 'should not show deleted document_files' do
       document_file_file_name = "#{@tmp_dir}/2010-08-08-test-document-file.textile"
       FileUtils.rm document_file_file_name
-      DocumentFile.documents_dir = @tmp_dir
-      DocumentFile.reload!
-      document_files_after = DocumentFile.all
+      MyDocument.documents_dir = @tmp_dir
+      MyDocument.reload!
+      document_files_after = MyDocument.all
       refute_equal @document_files_before.map(&:id), document_files_after.map(&:id)
     end
   end
