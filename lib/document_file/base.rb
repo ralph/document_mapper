@@ -99,7 +99,7 @@ module DocumentFile
 
     def self.method_missing(method_name, *args)
       self.all unless @@documents
-      super
+      respond_to?(method_name) ? self.send(method_name, *args) : super
     end
   end
 end
