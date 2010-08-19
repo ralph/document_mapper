@@ -8,6 +8,10 @@ http://github.com/mojombo/jekyll). They consist of a preambel written in YAML
 (also called YAML front matter), and some content in the format you prefer,
 e.g. Textile. Example:
 
+documents/
+|-foo.textile
+|-bar.textile
+
 !!!document starts in the following line.
 ---
 id: 1
@@ -22,9 +26,8 @@ I like the flowers.
 Can be abstracted like this:
 
 class MyDocument < DocumentFile::Base
+  self.documents_dir = './documents'
 end
-
-MyDocument.documents_dir = './documents'
 
 # You now have dynamic finders:
 doc = MyDocument.find_by_title("The shizzle!")    # => returns the document

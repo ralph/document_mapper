@@ -32,7 +32,7 @@ module DocumentFile
     def self.reload!
       if File.directory?(@@documents_dir)
         file_paths = Dir.glob("#{@@documents_dir}/*.*")
-        @@documents = file_paths.map { |file_path| self.new File.join(Dir.getwd, file_path) }
+        @@documents = file_paths.map { |file_path| self.new file_path }
       else
         []
       end
