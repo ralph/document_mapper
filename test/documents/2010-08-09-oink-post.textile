@@ -2,6 +2,7 @@
 id: 2
 title: The big pink Oink!
 tags: [tag, tug]
+special_attribute: Yes!
 ---
 
 I'm on a horse!

@@ -84,6 +84,11 @@ describe MyDocument do
       document_file = MyDocument.find_by_file_name file_name
       assert_equal document_file.file_name, file_name
     end
+
+    it 'should not be confused by attributes that only some dcuments have' do
+      document_file = MyDocument.find_by_special_attribute 'Yes!'
+      assert_equal 'Yes!', document_file.special_attribute
+    end
   end
 
   describe 'when getting the file name or file path' do

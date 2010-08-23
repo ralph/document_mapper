@@ -60,27 +60,11 @@ module DocumentFile
 
     def define_dynamic_methods
       @data.each do |method_name, value|
-        value = "'#{value}'" if value.is_a? String
-        instance_eval "def #{method_name}; #{value}; end"
+        instance_variable_set("@#{method_name}", value)
+        self.class.instance_eval "attr_reader :#{method_name}"
 
         if value.is_a? Array
-          by_attribute_method = <<-eos
-            def self.by_#{method_name}
-              documents = self.all
-              #{method_name} = {}
-              documents.each do |document|
-                document.#{method_name}.each do |single_item|
-                  if #{method_name}.has_key? single_item
-                    #{method_name}[single_item] << document
-                  else
-                    #{method_name}[single_item] = [document]
-                  end
-                end
-              end
-              #{method_name}
-            end
-          eos
-          self.class.send(:module_eval, by_attribute_method)
+          define_by_attribute_finder(method_name)
         end
 
         define_attribute_finder(method_name)
@@ -88,13 +72,47 @@ module DocumentFile
       @@dynamic_methods_defined = true
     end
 
+    # Defines an attribute finder, e.g.
+    # MyDocument.find_by_title('some_title') => some_document
     def define_attribute_finder(method_name)
       find_by_attribute_method = <<-eos
         def self.find_by_#{method_name}(attribute)
-          all.detect {|document| document.#{method_name} == attribute}
+          all.detect do |document|
+            if document.respond_to?('#{method_name}')
+              document.#{method_name} == attribute
+            else
+              false
+            end
+          end
         end
       eos
       self.class.send(:module_eval, find_by_attribute_method)
+    end
+
+    # Defines a by attribute finder for Array attributes, e.g.
+    # MyDocument.by_tags
+    #   => {
+    #        "tag_1" => [document_1, document_3],
+    #        "tag_2" => [document_2]
+    #      }
+    def define_by_attribute_finder(method_name)
+      by_attribute_method = <<-eos
+        def self.by_#{method_name}
+          documents = self.all
+          #{method_name} = {}
+          documents.each do |document|
+            document.#{method_name}.each do |single_item|
+              if #{method_name}.has_key? single_item
+                #{method_name}[single_item] << document
+              else
+                #{method_name}[single_item] = [document]
+              end
+            end
+          end
+          #{method_name}
+        end
+      eos
+      self.class.send(:module_eval, by_attribute_method)
     end
 
     def self.method_missing(method_name, *args)
