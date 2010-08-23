@@ -56,7 +56,7 @@ describe MyDocument do
     end
   end
 
-  describe 'when listing document_files by an array attribute' do
+  describe 'when listing document_files by an Array attribute' do
     it 'should return a Hash' do
       assert_equal Hash, MyDocument.by_tags.class
     end
@@ -69,6 +69,29 @@ describe MyDocument do
       document_files = MyDocument.by_tags
       assert_equal Set.new([1, 2]), document_files['tag'].map(&:id).to_set
       assert_equal Set.new([2]), document_files['tug'].map(&:id).to_set
+    end
+
+    it 'should not be confused by attributes that only some documents have' do
+      document_files_by_authors = MyDocument.by_authors
+      assert_equal 1, document_files_by_authors['Frank'].first.id
+
+      document_files_by_friends = MyDocument.by_friends
+      assert_equal 2, document_files_by_friends['Anton'].first.id
+    end
+  end
+
+  describe 'when finding document_files by an Array attribute value' do
+    it 'should return an Array' do
+      assert_equal Array, MyDocument.find_all_by_tag('tag').class
+    end
+
+    it 'should containt documents' do
+      assert_equal MyDocument, MyDocument.find_all_by_tag('tag').first.class
+    end
+
+    it 'should return the right documents' do
+      assert_equal [1, 2], MyDocument.find_all_by_tag('tag').map(&:id)
+      assert_equal [2], MyDocument.find_all_by_tag('tug').map(&:id)
     end
   end
 

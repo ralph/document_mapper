@@ -1,4 +1,5 @@
 require 'yaml'
+require 'active_support/inflector'
 
 module DocumentFile
   class Base
@@ -59,27 +60,28 @@ module DocumentFile
     end
 
     def define_dynamic_methods
-      @data.each do |method_name, value|
-        instance_variable_set("@#{method_name}", value)
-        self.class.instance_eval "attr_reader :#{method_name}"
+      @data.each do |attribute_name, value|
+        instance_variable_set("@#{attribute_name}", value)
+        self.class.instance_eval "attr_reader :#{attribute_name}"
 
         if value.is_a? Array
-          define_by_attribute_finder(method_name)
+          define_by_attribute_finder(attribute_name)
+          define_find_all_by_attribute_finder(attribute_name)
         end
 
-        define_attribute_finder(method_name)
+        define_attribute_finder(attribute_name)
       end
       @@dynamic_methods_defined = true
     end
 
     # Defines an attribute finder, e.g.
     # MyDocument.find_by_title('some_title') => some_document
-    def define_attribute_finder(method_name)
+    def define_attribute_finder(attribute_name)
       find_by_attribute_method = <<-eos
-        def self.find_by_#{method_name}(attribute)
+        def self.find_by_#{attribute_name}(attribute)
           all.detect do |document|
-            if document.respond_to?('#{method_name}')
-              document.#{method_name} == attribute
+            if document.respond_to?('#{attribute_name}')
+              document.#{attribute_name} == attribute
             else
               false
             end
@@ -95,24 +97,36 @@ module DocumentFile
     #        "tag_1" => [document_1, document_3],
     #        "tag_2" => [document_2]
     #      }
-    def define_by_attribute_finder(method_name)
+    def define_by_attribute_finder(array_attribute)
       by_attribute_method = <<-eos
-        def self.by_#{method_name}
+        def self.by_#{array_attribute}
           documents = self.all
-          #{method_name} = {}
+          #{array_attribute}_items = {}
           documents.each do |document|
-            document.#{method_name}.each do |single_item|
-              if #{method_name}.has_key? single_item
-                #{method_name}[single_item] << document
+            document.#{array_attribute}.each do |single_item|
+              if #{array_attribute}_items.has_key? single_item
+                #{array_attribute}_items[single_item] << document
               else
-                #{method_name}[single_item] = [document]
+                #{array_attribute}_items[single_item] = [document]
               end
-            end
+            end if document.#{array_attribute}
           end
-          #{method_name}
+          #{array_attribute}_items
         end
       eos
       self.class.send(:module_eval, by_attribute_method)
+    end
+
+    # Finds documents by a specific Array attribute value , e.g.
+    # MyDocument.find_all_by_tag('my_tag') => [document_1, document_2, ...]
+    def define_find_all_by_attribute_finder(array_attribute)
+      singular_array_attribute = ActiveSupport::Inflector.singularize array_attribute
+      find_all_by_attribute_method = <<-eos
+        def self.find_all_by_#{singular_array_attribute}(singular_array_attribute)
+          self.by_#{array_attribute}[singular_array_attribute]
+        end
+      eos
+      self.class.send(:module_eval, find_all_by_attribute_method)
     end
 
     def self.method_missing(method_name, *args)

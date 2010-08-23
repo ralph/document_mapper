@@ -3,6 +3,7 @@ id: 1
 title: The shizzle!
 tags: [tag]
 number_of_foos: 42
+authors: [Frank, Bertha]
 ---
 
 I like the flowers.

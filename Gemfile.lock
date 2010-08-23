@@ -1,0 +1,16 @@
+PATH
+  remote: .
+  specs:
+    document_file (0.0.2)
+      activesupport (~> 3.0.0)
+
+GEM
+  specs:
+    activesupport (3.0.0.rc)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  activesupport (~> 3.0.0)
+  document_file!
