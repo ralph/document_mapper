@@ -1,20 +1,11 @@
-require 'minitest/spec'
-MiniTest::Unit.autorun
-require 'set'
-require 'fileutils'
-
-testdir = File.dirname(__FILE__)
-libdir = File.dirname(File.dirname(__FILE__)) + '/lib'
-$LOAD_PATH.unshift libdir unless $LOAD_PATH.include?(libdir)
-
-require 'document_file'
+require './test/test_base'
 
 class MyDocument < DocumentFile::Base
 end
 
 describe MyDocument do
   before do
-    MyDocument.documents_dir = testdir + '/documents'
+    MyDocument.documents_dir = TEST_DIR + '/documents'
   end
 
   describe 'when finding all document_files' do
@@ -33,7 +24,7 @@ describe MyDocument do
 
   describe 'when initializing a MyDocument' do
     before do
-      @document_file = MyDocument.new(testdir + '/documents/2010-08-08-test-document-file.textile')
+      @document_file = MyDocument.new(TEST_DIR + '/documents/2010-08-08-test-document-file.textile')
     end
 
     it 'should initialize the content' do
@@ -153,7 +144,7 @@ describe MyDocument do
 
   describe 'when reloading all document_files' do
     before do
-      @default_dir = testdir + '/documents'
+      @default_dir = TEST_DIR + '/documents'
       MyDocument.documents_dir = @default_dir
       MyDocument.reload!
       @document_files_before = MyDocument.all
