@@ -13,7 +13,8 @@ module DocumentFile
         collection = new_without_finders(*args)
         collection.each do |document|
           self.ensure_document(document)
-          collection.define_dynamic_finders document.data
+          attributes_hash = document.data.merge({'file_name' => document.file_name})
+          collection.define_dynamic_finders attributes_hash
         end
         collection
       end
@@ -27,14 +28,11 @@ module DocumentFile
     end
 
     def define_dynamic_finders(attributes_hash)
-      define_attribute_finder 'file_name'
       attributes_hash.each do |attribute, value|
-        define_attribute_finder attribute
+        define_find_all_by attribute, value
+        define_find_by attribute
 
-        if value.is_a? Array
-          define_by_attribute_finder(attribute)
-          define_find_all_by_attribute_finder(attribute)
-        end
+        define_by_array_attribute(attribute) if value.is_a? Array
       end
     end
 
@@ -44,8 +42,8 @@ module DocumentFile
     #        "tag_1" => [document_1, document_3],
     #        "tag_2" => [document_2]
     #      }
-    def define_by_attribute_finder(array_attribute)
-      by_attribute_method = <<-eos
+    def define_by_array_attribute(array_attribute)
+      by_attribute = <<-eos
         def by_#{array_attribute}
           #{array_attribute}_items = {}
           each do |document|
@@ -60,36 +58,46 @@ module DocumentFile
           #{array_attribute}_items
         end
       eos
-      instance_eval by_attribute_method
+      instance_eval by_attribute
     end
 
     # Finds documents by a specific Array attribute value , e.g.
     # MyDocument.find_all_by_tag('my_tag') => [document_1, document_2, ...]
-    def define_find_all_by_attribute_finder(array_attribute)
-      singular_array_attribute = ActiveSupport::Inflector.singularize array_attribute
-      find_all_by_attribute_method = <<-eos
-        def find_all_by_#{singular_array_attribute}(singular_array_attribute)
-          by_#{array_attribute}[singular_array_attribute]
-        end
-      eos
-      instance_eval find_all_by_attribute_method
-    end
-
-    # Defines an attribute finder, e.g.
-    # MyDocument.find_by_title('some_title') => some_document
-    def define_attribute_finder(attribute_name)
-      find_by_attribute_method = <<-eos
-        def find_by_#{attribute_name}(attribute)
-          detect do |document|
-            if document.respond_to?('#{attribute_name}')
-              document.#{attribute_name} == attribute
-            else
-              false
+    def define_find_all_by(attribute, value)
+      if value.is_a? Array
+        singular_attribute = ActiveSupport::Inflector.singularize attribute
+      else
+        singular_attribute = attribute
+      end
+      find_all_by_attribute = <<-eos
+        def find_all_by_#{singular_attribute}(attribute)
+          if respond_to? :by_#{attribute}
+            by_#{attribute}[attribute]
+          else
+            documents = select do |document|
+              if document.respond_to? :#{attribute}
+                document.#{attribute} == attribute
+              else
+                false
+              end
             end
+            Collection.new documents
           end
         end
       eos
-      instance_eval find_by_attribute_method
+      instance_eval find_all_by_attribute
+    end
+
+    # Defines an attribute finder for one document, e.g.
+    # MyDocument.find_by_title('some_title') => some_document
+    def define_find_by(attribute)
+      find_by_attribute = <<-eos
+        def find_by_#{attribute}(attribute)
+          documents = find_all_by_#{attribute}(attribute)
+          documents.any? ? documents.first : nil
+        end
+      eos
+      instance_eval find_by_attribute
     end
   end
 end

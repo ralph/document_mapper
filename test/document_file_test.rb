@@ -68,7 +68,7 @@ describe MyDocument do
     end
   end
 
-  describe 'when finding document_files by an Array attribute value' do
+  describe 'when finding all document_files by an Array attribute value' do
     it 'should return a DocumentFile::Collection' do
       assert_equal DocumentFile::Collection, MyDocument.find_all_by_tag('tag').class
     end
@@ -80,6 +80,29 @@ describe MyDocument do
     it 'should return the right documents' do
       assert_equal [1, 2], MyDocument.find_all_by_tag('tag').map(&:id)
       assert_equal [2], MyDocument.find_all_by_tag('tug').map(&:id)
+    end
+  end
+
+  describe 'when finding all document_files by an attribute value' do
+    before do
+      @collection = MyDocument.find_all_by_published(true)
+    end
+
+    it 'should return a DocumentFile::Collection' do
+      assert_equal DocumentFile::Collection, @collection.class
+    end
+
+    it 'should containt documents' do
+      assert_equal MyDocument, @collection.first.class
+    end
+
+    it 'should return the right documents' do
+      assert_equal [1, 2], @collection.map(&:id)
+    end
+
+    it 'should return an empty collection if the document was not found' do
+      empty_collection = MyDocument.find_all_by_published(false)
+      assert_equal [], empty_collection.map(&:id)
     end
   end
 

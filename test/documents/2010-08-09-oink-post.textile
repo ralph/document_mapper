@@ -4,6 +4,7 @@ title: The big pink Oink!
 tags: [tag, tug]
 special_attribute: Yes!
 friends: [Anton, Paul]
+published: true
 ---
 
 I'm on a horse!
