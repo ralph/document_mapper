@@ -21,6 +21,7 @@ id: 1
 title: The shizzle!
 tags: [tag]
 number_of_foos: 42
+status: published
 ---
 
 I like the flowers.
@@ -44,13 +45,27 @@ h3. Dynamic finders
 doc = MyDocument.find_by_title("The shizzle!")    # => returns the document
 doc = MyDocument.find_by_number_of_foos(42)       # => returns the document
 doc = MyDocument.find_by_file_name("foo.textile") # => returns the document
+
+docs = MyDocument.find_all_by_status("published") # => [doc_1, doc2, ...]
+docs = MyDocument.find_all_by_tag("tag")          # => [doc_1, doc2, ...]
 </code></pre>
 
 h3. Listing documents by Array attributes
 
 <pre><code>
-docs = MyDocument.by_tags # => Returns {"tag" => [doc_1, doc2, ...], ...}
+docs = MyDocument.by_tags
+# => Returns {"tag" => [doc_1, doc2, ...], "tag_2" => [doc_1, doc_3, ...],  ...}
 </code></pre>
+
+h3. Chaining
+
+<pre><code>
+docs = MyDocument.find_all_by_status("published").by_tags
+#   => Returns {"tag" => [doc_1, doc2, ...], ...}
+docs = MyDocument.find_all_by_status("published").find_all_by_tag("tag")
+#   => Returns [doc_1, doc2, ...]
+</code></pre>
+
 
 h3. Accessing the attributes of single documents
 
@@ -77,3 +92,9 @@ If any of the files change, you must manually reload them:
 <pre><code>
 MyDocument.reload!
 </code></pre>
+
+
+h2. Author
+
+Written by "Ralph von der Heyden":http://rvdh.de. Don't hesitate to contact me if you have any further questions.
+Follow me on "Twitter":http://twitter.com/ralph.
