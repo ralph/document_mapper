@@ -59,8 +59,8 @@ module DocumentFile
 
     def define_dynamic_methods
       @data.each do |attribute_name, value|
-        instance_variable_set("@#{attribute_name}", value)
-        self.class.instance_eval "attr_reader :#{attribute_name}"
+        attribute_reader = "def #{attribute_name}; @data['#{attribute_name}']; end"
+        self.class.module_eval attribute_reader
       end
       @@dynamic_methods_defined = true
     end
