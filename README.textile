@@ -43,7 +43,7 @@ h3. Dynamic finders
 <pre><code>
 doc = MyDocument.find_by_title("The shizzle!")    # => returns the document
 doc = MyDocument.find_by_number_of_foos(42)       # => returns the document
-doc = MyDocument.find_by_file_name('foo.textile') # => returns the document
+doc = MyDocument.find_by_file_name("foo.textile") # => returns the document
 </code></pre>
 
 h3. Listing documents by Array attributes
@@ -58,9 +58,9 @@ h3. Accessing the attributes of single documents
 doc.title                    # => "The shizzle!"
 doc.tags                     # => ["tag"]
 doc.content                  # => "I like the flowers."
-doc.filename                 # => returns the filename without extension
-doc.file_name_with_extension # => does what it says
-doc.file_extension           # => does what it says
+doc.filename                 # => "foo"
+doc.file_name_with_extension # => "foo.textile"
+doc.file_extension           # => ".textile"
 </code></pre>
 
 h3. Initializing single documents
