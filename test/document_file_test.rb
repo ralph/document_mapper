@@ -1,8 +1,5 @@
 require './test/test_base'
 
-class MyDocument < DocumentFile::Base
-end
-
 describe MyDocument do
   before do
     MyDocument.documents_dir = TEST_DIR + '/documents'
@@ -13,8 +10,8 @@ describe MyDocument do
       @document_files = MyDocument.all
     end
 
-    it 'should return an Array' do
-      assert_equal Array, @document_files.class
+    it 'should return a DocumentFile::Collection' do
+      assert_equal DocumentFile::Collection, @document_files.class
     end
   
     it "should find all document_files" do
@@ -31,12 +28,12 @@ describe MyDocument do
       assert_equal "I like the flowers.\n", @document_file.content
     end
 
-    it 'should intitialize strings from the front matter' do
+    it 'should intitialize Strings from the front matter' do
       assert_equal String, @document_file.title.class
       assert_equal 'The shizzle!', @document_file.title
     end
 
-    it 'should intitialize strings from the front matter' do
+    it 'should intitialize Arrays from the front matter' do
       assert_equal Array, @document_file.tags.class
       assert_equal ['tag'], @document_file.tags
     end
@@ -72,8 +69,8 @@ describe MyDocument do
   end
 
   describe 'when finding document_files by an Array attribute value' do
-    it 'should return an Array' do
-      assert_equal Array, MyDocument.find_all_by_tag('tag').class
+    it 'should return a DocumentFile::Collection' do
+      assert_equal DocumentFile::Collection, MyDocument.find_all_by_tag('tag').class
     end
 
     it 'should containt documents' do
