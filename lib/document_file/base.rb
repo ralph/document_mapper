@@ -62,11 +62,9 @@ module DocumentFile
         attribute_reader = "def #{attribute_name}; @data['#{attribute_name}']; end"
         self.class.module_eval attribute_reader
       end
-      @@dynamic_methods_defined = true
     end
 
     def self.method_missing(method_name, *args)
-      self.all unless @@documents
       self.all.respond_to?(method_name) ? self.all.send(method_name, *args) : super
     end
   end
