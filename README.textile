@@ -1,0 +1,79 @@
+h1. Document File
+
+An attempt to create a simple model layer that abstracts flat text files. Text files look like the ones used in "jekyll":http://github.com/mojombo/jekyll. They consist of a preambel written in YAML (also called YAML front matter), and some content in the format you prefer, e.g. Textile.
+
+
+h2. Example
+
+As an example let's assume we have a directory called "documents" containing the following files:
+
+<pre><code>
+documents/
+|-foo.textile
+|-bar.textile
+</code></pre>
+
+Documents look somehow like this. The part between the @---@s is the YAML front matter. After the second @---@, there is one blank line, followed by the content of the file. All items in the YAML front matter and the content are accessible by Document File.
+
+<pre><code>
+---
+id: 1
+title: The shizzle!
+tags: [tag]
+number_of_foos: 42
+---
+
+I like the flowers.
+</code></pre>
+
+
+In order to access the documents in the folder, you have to create a document class that inherits from @DocumentFile::Base@. Inside the class definition, you must set the @documents_dir@ class variable in order to tell Document File where to look for files. In our little example, we will do the following:
+
+<pre><code>
+class MyDocument < DocumentFile::Base
+  self.documents_dir = './documents'
+end
+</code></pre>
+
+
+h2. Available functionality
+
+h3. Dynamic finders
+
+<pre><code>
+doc = MyDocument.find_by_title("The shizzle!")    # => returns the document
+doc = MyDocument.find_by_number_of_foos(42)       # => returns the document
+doc = MyDocument.find_by_file_name('foo.textile') # => returns the document
+</code></pre>
+
+h3. Listing documents by Array attributes
+
+<pre><code>
+docs = MyDocument.by_tags # => Returns {"tag" => [doc_1, doc2, ...], ...}
+</code></pre>
+
+h3. Accessing the attributes of single documents
+
+<pre><code>
+doc.title                    # => "The shizzle!"
+doc.tags                     # => ["tag"]
+doc.content                  # => "I like the flowers."
+doc.filename                 # => returns the filename without extension
+doc.file_name_with_extension # => does what it says
+doc.file_extension           # => does what it says
+</code></pre>
+
+h3. Initializing single documents
+
+This will even work without setting the @documents_dir@ class variable.
+
+<pre><code>
+doc = MyDocument.new('./documents/document-file.textile')
+</code></pre>
+
+h3. Reloading
+
+If any of the files change, you must manually reload them:
+<pre><code>
+MyDocument.reload!
+</code></pre>
