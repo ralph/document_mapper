@@ -11,7 +11,7 @@ Gem::Specification.new do |s|
   s.authors           = [ 'Ralph von der Heyden' ]
   s.has_rdoc          = false
 
-  s.files             = %w( README Rakefile LICENSE )
+  s.files             = %w( Gemfile Gemfile.lock LICENSE README.textile Rakefile )
   s.files            += Dir.glob("lib/**/*")
   s.files            += Dir.glob("test/**/*")
 
