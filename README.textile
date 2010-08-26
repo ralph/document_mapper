@@ -7,16 +7,14 @@ h2. Example
 
 As an example let's assume we have a directory called "documents" containing the following files:
 
-<pre><code>
-documents/
+<pre><code>documents/
 |-foo.textile
 |-bar.textile
 </code></pre>
 
 Documents look somehow like this. The part between the @---@s is the YAML front matter. After the second @---@, there is one blank line, followed by the content of the file. All items in the YAML front matter and the content are accessible by Document File.
 
-<pre><code>
----
+<pre><code>---
 id: 1
 title: The shizzle!
 tags: [tag]
@@ -30,8 +28,7 @@ I like the flowers.
 
 In order to access the documents in the folder, you have to create a document class that inherits from @DocumentFile::Base@. Inside the class definition, you must set the @documents_dir@ class variable in order to tell Document File where to look for files. In our little example, we will do the following:
 
-<pre><code>
-class MyDocument < DocumentFile::Base
+<pre><code>class MyDocument < DocumentFile::Base
   self.documents_dir = './documents'
 end
 </code></pre>
@@ -41,8 +38,7 @@ h2. Available functionality
 
 h3. Dynamic finders
 
-<pre><code>
-doc = MyDocument.find_by_title("The shizzle!")    # => returns the document
+<pre><code>doc = MyDocument.find_by_title("The shizzle!")    # => returns the document
 doc = MyDocument.find_by_number_of_foos(42)       # => returns the document
 doc = MyDocument.find_by_file_name("foo.textile") # => returns the document
 
@@ -52,15 +48,13 @@ docs = MyDocument.find_all_by_tag("tag")          # => [doc_1, doc2, ...]
 
 h3. Listing documents by Array attributes
 
-<pre><code>
-docs = MyDocument.by_tags
+<pre><code>docs = MyDocument.by_tags
 # => Returns {"tag" => [doc_1, doc2, ...], "tag_2" => [doc_1, doc_3, ...],  ...}
 </code></pre>
 
 h3. Chaining
 
-<pre><code>
-docs = MyDocument.find_all_by_status("published").by_tags
+<pre><code>docs = MyDocument.find_all_by_status("published").by_tags
 #   => Returns {"tag" => [doc_1, doc2, ...], ...}
 docs = MyDocument.find_all_by_status("published").find_all_by_tag("tag")
 #   => Returns [doc_1, doc2, ...]
@@ -69,8 +63,7 @@ docs = MyDocument.find_all_by_status("published").find_all_by_tag("tag")
 
 h3. Accessing the attributes of single documents
 
-<pre><code>
-doc.title                    # => "The shizzle!"
+<pre><code>doc.title                    # => "The shizzle!"
 doc.tags                     # => ["tag"]
 doc.content                  # => "I like the flowers."
 doc.filename                 # => "foo"
@@ -82,15 +75,13 @@ h3. Initializing single documents
 
 This will even work without setting the @documents_dir@ class variable.
 
-<pre><code>
-doc = MyDocument.new('./documents/document-file.textile')
+<pre><code>doc = MyDocument.new('./documents/document-file.textile')
 </code></pre>
 
 h3. Reloading
 
 If any of the files change, you must manually reload them:
-<pre><code>
-MyDocument.reload!
+<pre><code>MyDocument.reload!
 </code></pre>
 
 
