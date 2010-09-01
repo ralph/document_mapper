@@ -42,7 +42,7 @@ h3. Dynamic finders
 
 <pre><code>doc = MyDocument.find_by_title("The shizzle!")    # => returns the document
 doc = MyDocument.find_by_number_of_foos(42)       # => returns the document
-doc = MyDocument.find_by_file_name("foo.textile") # => returns the document
+doc = MyDocument.find_by_file_name("foo")         # => returns the document
 
 docs = MyDocument.find_all_by_status("published") # => [doc_1, doc_2, ...]
 docs = MyDocument.find_all_by_tag("tag")          # => [doc_1, doc_2, ...]
@@ -70,7 +70,7 @@ h3. Accessing the attributes of single documents
 <pre><code>doc.title                    # => "The shizzle!"
 doc.tags                     # => ["tag"]
 doc.content                  # => "I like the flowers."
-doc.filename                 # => "foo"
+doc.file_name                # => "foo"
 doc.file_name_with_extension # => "foo.textile"
 doc.file_extension           # => ".textile"
 </code></pre>
@@ -92,4 +92,4 @@ If any of the files change, you must manually reload them:
 h2. Author
 
 Written by "Ralph von der Heyden":http://rvdh.de. Don't hesitate to contact me if you have any further questions.
-Follow me on "Twitter":http://twitter.com/ralph.
+Follow me on "Twitter":http://twitter.com/ralph!
