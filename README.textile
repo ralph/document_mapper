@@ -1,6 +1,6 @@
 h1. Document File
 
-An attempt to create a simple model layer that abstracts flat text files. Text files look like the ones used in "jekyll":http://github.com/mojombo/jekyll. They consist of a preambel written in YAML (also called YAML front matter), and some content in the format you prefer, e.g. Textile.
+Document file is an object mapper for plain text documents. The documents look like the ones used in "jekyll":http://github.com/mojombo/jekyll. They consist of a preambel written in YAML (also called YAML front matter), and some content in the format you prefer, e.g. Textile.
 
 
 h2. Example
@@ -42,22 +42,24 @@ h3. Dynamic finders
 doc = MyDocument.find_by_number_of_foos(42)       # => returns the document
 doc = MyDocument.find_by_file_name("foo.textile") # => returns the document
 
-docs = MyDocument.find_all_by_status("published") # => [doc_1, doc2, ...]
-docs = MyDocument.find_all_by_tag("tag")          # => [doc_1, doc2, ...]
+docs = MyDocument.find_all_by_status("published") # => [doc_1, doc_2, ...]
+docs = MyDocument.find_all_by_tag("tag")          # => [doc_1, doc_2, ...]
 </code></pre>
+
 
 h3. Listing documents by Array attributes
 
 <pre><code>docs = MyDocument.by_tags
-# => Returns {"tag" => [doc_1, doc2, ...], "tag_2" => [doc_1, doc_3, ...],  ...}
+# => Returns {"tag" => [doc_1, doc_2, ...], "tag_2" => [doc_1, doc_3, ...],  ...}
 </code></pre>
+
 
 h3. Chaining
 
 <pre><code>docs = MyDocument.find_all_by_status("published").by_tags
-#   => Returns {"tag" => [doc_1, doc2, ...], ...}
+#   => Returns {"tag" => [doc_1, doc_2, ...], ...}
 docs = MyDocument.find_all_by_status("published").find_all_by_tag("tag")
-#   => Returns [doc_1, doc2, ...]
+#   => Returns [doc_1, doc_2, ...]
 </code></pre>
 
 
