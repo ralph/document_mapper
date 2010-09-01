@@ -24,7 +24,7 @@ module DocumentFile
     end
 
     def self.ensure_document(document)
-      raise ArgumentError unless document.is_a? DocumentFile::Base
+      raise ArgumentError unless document.class.include? DocumentFile
     end
 
     def define_dynamic_finders(attributes_hash)

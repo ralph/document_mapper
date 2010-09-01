@@ -1,10 +1,6 @@
 require './test/test_base'
 
 describe MyDocument do
-  before do
-    MyDocument.documents_dir = TEST_DIR + '/documents'
-  end
-
   describe 'when finding all document_files' do
     before do
       @document_files = MyDocument.all
@@ -24,6 +20,10 @@ describe MyDocument do
       @document_file = MyDocument.new(
         TEST_DIR + '/documents/2010-08-08-test-document-file.textile'
       )
+    end
+
+    it 'should know the documents_dir' do
+      assert_equal MyDocument.documents_dir, @document_file.documents_dir
     end
 
     it 'should initialize the content' do

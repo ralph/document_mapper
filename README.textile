@@ -28,7 +28,8 @@ I like the flowers.
 
 In order to access the documents in the folder, you have to create a document class that inherits from @DocumentFile::Base@. Inside the class definition, you must set the @documents_dir@ class variable in order to tell Document File where to look for files. In our little example, we will do the following:
 
-<pre><code>class MyDocument < DocumentFile::Base
+<pre><code>class MyDocument
+  include DocumentFile
   self.documents_dir = './documents'
 end
 </code></pre>
