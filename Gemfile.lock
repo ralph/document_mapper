@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    document_file (0.0.4)
+    document_file (0.0.5)
       activesupport (~> 3.0.0)
 
 GEM
