@@ -15,7 +15,11 @@ module DocumentFile
   attr_reader :content, :file_path, :data
 
   def initialize(new_file_path)
-    @file_path = new_file_path
+    @file_path = if File.exist? new_file_path
+                   new_file_path
+                 else
+                   [self.documents_dir, new_file_path].join('/')
+                 end
     read_yaml
   end
 

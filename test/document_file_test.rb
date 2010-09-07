@@ -17,9 +17,7 @@ describe MyDocument do
 
   describe 'when initializing a MyDocument' do
     before do
-      @document_file = MyDocument.new(
-        TEST_DIR + '/documents/2010-08-08-test-document-file.textile'
-      )
+      @document_file = MyDocument.new('2010-08-08-test-document-file.textile')
     end
 
     it 'should know the documents_dir' do
@@ -43,6 +41,13 @@ describe MyDocument do
     it 'should intitialize integers from the front matter' do
       assert_equal Fixnum, @document_file.number_of_foos.class
       assert_equal 42, @document_file.number_of_foos
+    end
+
+    it 'should work with absolute path' do
+      document_file = MyDocument.new(
+        TEST_DIR + '/documents/2010-08-08-test-document-file.textile'
+      )
+      assert_equal MyDocument, document_file.class
     end
   end
 
