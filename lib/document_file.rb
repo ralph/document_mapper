@@ -48,8 +48,8 @@ private
   end
 
   def define_dynamic_methods
-    @data.each do |attribute_name, value|
-      attribute_reader = "def #{attribute_name}; @data['#{attribute_name}']; end"
+    @data.each do |attribute, value|
+      attribute_reader = "def #{attribute}; @data['#{attribute}']; end"
       self.class.module_eval attribute_reader
     end
   end
@@ -65,7 +65,7 @@ private
     def reload!
       if File.directory?(documents_dir)
         file_paths = Dir.glob("#{documents_dir}/*.*")
-        @@documents = Collection.new file_paths.map { |file_path| self.new file_path }
+        @@documents = Collection.new file_paths.map { |fp| self.new fp }
       else
         []
       end
