@@ -177,6 +177,7 @@ describe MyDocument do
       @document_files_before = MyDocument.all
       @tmp_dir = "#{@default_dir}-#{Time.now.to_i}-#{rand(999999)}-test"
       FileUtils.cp_r @default_dir, @tmp_dir
+      MyDocument.documents_dir = @tmp_dir
     end
 
     after do
@@ -184,7 +185,7 @@ describe MyDocument do
     end
 
     it 'should get updated document_files' do
-      updated_document_file = <<-eos
+      add_document '2010-08-08-test-document-file.textile', <<-eos
 ---
 id: 1
 title: The shuzzle!
@@ -194,9 +195,6 @@ number_of_foos: 48
 
 I like the foos.
 eos
-      document_file_file_name = "#{@tmp_dir}/2010-08-08-test-document-file.textile"
-      File.open(document_file_file_name, 'w') {|f| f.write(updated_document_file) }
-      MyDocument.documents_dir = @tmp_dir
       MyDocument.reload!
       document_files_after = MyDocument.all
 
@@ -208,7 +206,7 @@ eos
     end
 
     it 'should get new document_files' do
-      new_document_file = <<-eos
+      add_document '2010-08-15-new-test-document_file.textile', <<-eos
 ---
 id: 3
 title: The shuzzle!
@@ -218,9 +216,6 @@ number_of_foos: 48
 
 I like the cows.
 eos
-      document_file_file_name = "#{@tmp_dir}/2010-08-15-new-test-document_file.textile"
-      File.open(document_file_file_name, 'w') {|f| f.write(new_document_file) }
-      MyDocument.documents_dir = @tmp_dir
       MyDocument.reload!
       document_files_after = MyDocument.all
 
@@ -236,13 +231,21 @@ eos
     end
 
     it 'should not show deleted document_files' do
-      document_file_file_name = "#{@tmp_dir}/2010-08-08-test-document-file.textile"
-      FileUtils.rm document_file_file_name
-      MyDocument.documents_dir = @tmp_dir
+      remove_document '2010-08-08-test-document-file.textile' # has id 1
       MyDocument.reload!
       document_files_after = MyDocument.all
-      refute_equal @document_files_before.map(&:id), document_files_after.map(&:id)
+      refute document_files_after.map(&:id).include? 1
     end
+  end
+
+  def add_document(file_name, content)
+    complete_file_name = [MyDocument.documents_dir, file_name].join('/')
+    File.open(complete_file_name, 'w') {|f| f.write(content) }
+  end
+
+  def remove_document(file_name)
+    complete_file_name = [MyDocument.documents_dir, file_name].join('/')
+    FileUtils.rm complete_file_name
   end
 end
 
