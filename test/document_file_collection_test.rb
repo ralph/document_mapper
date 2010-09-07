@@ -65,4 +65,31 @@ describe DocumentFile::Collection do
       assert document, collection.first
     end
   end
+
+  describe 'when finding documents by date' do
+    it 'should return a collection' do
+      documents = MyDocument.find_all_by_date 2010
+      assert_equal documents.class, DocumentFile::Collection
+    end
+
+    it 'should return all documents with the year specified' do
+      documents = MyDocument.find_all_by_date 2010
+      assert_equal 2, documents.size
+    end
+
+    it 'should return all documents with the year and month specified' do
+      documents = MyDocument.find_all_by_date 2010, 8
+      assert_equal 2, documents.size
+    end
+
+    it 'should return all documents with the year, month and day specified' do
+      documents = MyDocument.find_all_by_date 2010, 8, 8
+      assert_equal 1, documents.size
+    end
+
+    it 'should return the first match' do
+      document = MyDocument.find_by_date 2010, 8
+      assert_equal 1, document.id
+    end
+  end
 end

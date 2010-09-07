@@ -14,6 +14,7 @@ module DocumentFile
         collection.each do |document|
           self.ensure_document(document)
           attributes_hash = document.data.merge({'file_name' => document.file_name})
+          attributes_hash.delete 'date'
           collection.define_dynamic_finders attributes_hash
         end
         collection
@@ -25,6 +26,21 @@ module DocumentFile
 
     def self.ensure_document(document)
       raise ArgumentError unless document.class.include? DocumentFile
+    end
+
+    def find_all_by_date(*args)
+      return if args.size == 0
+
+      date_parts = %w(year month day)
+      docs = self
+      args.size.times do |i|
+        docs = docs.select { |doc| doc.date.send(date_parts[i]) == args[i] }
+      end
+      self.class.new docs
+    end
+
+    def find_by_date(*args)
+      find_all_by_date(*args).first
     end
 
     def define_dynamic_finders(attributes_hash)
