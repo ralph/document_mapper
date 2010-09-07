@@ -51,6 +51,61 @@ describe MyDocument do
     end
   end
 
+  describe 'when initializing the date' do
+    after do
+      remove_document @file_name if @file_name
+    end
+
+    it 'should initialize the date from the filename' do
+      document_file = MyDocument.new '2010-08-08-test-document-file.textile'
+      assert_equal Date.new(2010, 8, 8), document_file.date
+    end
+
+    it 'should initialize the date from the YAML front matter' do
+      @file_name = 'date-test-1.textile'
+      add_document @file_name, <<-eos
+---
+id: 5
+title: Date test 1
+date: 2010-09-10
+---
+
+I like the dates.
+eos
+      document_file = MyDocument.new @file_name
+      assert_equal Date.new(2010, 9, 10), document_file.date
+    end
+
+    it 'should prefer the date from the YAML front matter' do
+      @file_name = '2010-08-15-date-test-1.textile'
+      add_document @file_name, <<-eos
+---
+id: 5
+title: Date test 2
+date: 2010-08-20
+---
+
+I like the dates.
+eos
+      document_file = MyDocument.new @file_name
+      assert_equal Date.new(2010, 8, 20), document_file.date
+    end
+
+    it 'should not set a date if neither filename nor YAML date is set' do
+      @file_name = 'date-test-1.textile'
+      add_document @file_name, <<-eos
+---
+id: 5
+title: Date test 3
+---
+
+I like the dates.
+eos
+      document_file = MyDocument.new @file_name
+      assert_nil document_file.date
+    end
+  end
+
   describe 'when listing document_files by an Array attribute' do
     it 'should return a Hash' do
       assert_equal Hash, MyDocument.by_tags.class
@@ -250,7 +305,7 @@ eos
 
   def remove_document(file_name)
     complete_file_name = [MyDocument.documents_dir, file_name].join('/')
-    FileUtils.rm complete_file_name
+    FileUtils.rm complete_file_name if File.exist? complete_file_name
   end
 end
 

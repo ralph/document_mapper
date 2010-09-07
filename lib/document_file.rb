@@ -44,6 +44,13 @@ private
       @data = YAML.load($1)
     end
     @data ||= {}
+    if !@data.has_key? 'date'
+      begin
+        match = File.basename(@file_path).match(/(\d{4})-(\d{1,2})-(\d{1,2}).*/)
+        @data['date'] = Date.new(match[1].to_i, match[2].to_i, match[3].to_i)
+      rescue NoMethodError => err
+      end
+    end
     define_dynamic_methods
   end
 
