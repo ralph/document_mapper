@@ -4,9 +4,7 @@ describe DocumentFile::Collection do
   describe 'when adding documents to the collection' do
     before do
       @collection = DocumentFile::Collection.new
-      @document = MyDocument.new(
-        TEST_DIR + '/documents/2010-08-08-test-document-file.textile'
-      )
+      @document = MyDocument.new('2010-08-08-test-document-file.textile')
     end
 
     it 'should not accept non-documents' do
@@ -62,9 +60,7 @@ describe DocumentFile::Collection do
     end
 
     it 'should accept documents' do
-      document = MyDocument.new(
-        TEST_DIR + '/documents/2010-08-08-test-document-file.textile'
-      )
+      document = MyDocument.new '2010-08-08-test-document-file.textile'
       collection = DocumentFile::Collection.new [document]
       assert document, collection.first
     end

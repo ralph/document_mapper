@@ -190,30 +190,31 @@ eos
 
   describe 'when getting the file name or file path' do
     before do
-      @file_path = './test/documents/2010-08-08-test-document-file.textile'
+      @file_name = '2010-08-08-test-document-file.textile'
     end
 
     it 'should show the right file name' do
-      document_file = MyDocument.new @file_path
+      document_file = MyDocument.new @file_name
       file_name = '2010-08-08-test-document-file'
       assert_equal file_name, document_file.file_name
     end
 
     it 'should show the right file name with extension' do
-      document_file = MyDocument.new @file_path
+      document_file = MyDocument.new @file_name
       file_name = '2010-08-08-test-document-file.textile'
       assert_equal file_name, document_file.file_name_with_extension
     end
 
     it 'should show the right extension' do
-      document_file = MyDocument.new @file_path
+      document_file = MyDocument.new @file_name
       extension = '.textile'
       assert_equal extension, document_file.file_extension
     end
 
     it 'should show the right file path' do
-      document_file = MyDocument.new @file_path
-      assert_equal @file_path, document_file.file_path
+      document_file = MyDocument.new @file_name
+      expected_path = [MyDocument.documents_dir, @file_name].join('/')
+      assert_equal expected_path, document_file.file_path
     end
   end
 
