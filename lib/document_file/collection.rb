@@ -34,6 +34,7 @@ module DocumentFile
       date_parts = %w(year month day)
       docs = self
       args.size.times do |i|
+        next if args[i] == '*'
         docs = docs.select { |doc| doc.date.send(date_parts[i]) == args[i] }
       end
       self.class.new docs

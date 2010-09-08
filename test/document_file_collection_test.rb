@@ -87,6 +87,26 @@ describe DocumentFile::Collection do
       assert_equal 1, documents.size
     end
 
+    it 'should return all documents with the year and day specified' do
+      documents = MyDocument.find_all_by_date 2010, '*', 8
+      assert_equal 1, documents.size
+    end
+
+    it 'should return all documents with the month and day specified' do
+      documents = MyDocument.find_all_by_date '*', 8, 8
+      assert_equal 1, documents.size
+    end
+
+    it 'should return all documents with the day specified' do
+      documents = MyDocument.find_all_by_date '*', '*', 8
+      assert_equal 1, documents.size
+    end
+
+    it 'should return all documents with the month specified' do
+      documents = MyDocument.find_all_by_date '*', 8, '*'
+      assert_equal 2, documents.size
+    end
+
     it 'should return the first match' do
       document = MyDocument.find_by_date 2010, 8
       assert_equal 1, document.id

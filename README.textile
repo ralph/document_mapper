@@ -60,9 +60,13 @@ h3. Listing documents by the date attribute
 
 Document file tries to parse the filename of your documents to create a date attribute. In order to use the automatic parsing, the filenames have to start with a date string, e.g. @2010-09-13-ruby-stuff.textile@. If you don't want to set the date in the filename, you can still do it in the YAML front matter with e.g. @date: 2010-09-10@.
 
-<pre><code>docs = MyDocument.find_all_by_date(2010)        # => returns all documents from 2010
-docs = MyDocument.find_all_by_date(2010, 9)     # => returns all documents from Sep., 2010
-docs = MyDocument.find_all_by_date(2010, 9, 13) # => returns all documents from Sep. 13th, 2010
+<pre><code>docs = MyDocument.find_all_by_date(2010)          # => returns all documents from 2010
+docs = MyDocument.find_all_by_date(2010, 9)       # => returns all documents from Sep., 2010
+docs = MyDocument.find_all_by_date(2010, 9, 13)   # => returns all documents from Sep. 13th, 2010
+docs = MyDocument.find_all_by_date('*', 9, 13)    # => returns all documents from any Sep. 13th
+docs = MyDocument.find_all_by_date(2010, '*', 13) # => returns all documents from any 13th of 2010
+docs = MyDocument.find_all_by_date('*', '*', 13)  # => returns all documents from any 13th
+docs = MyDocument.find_all_by_date('*', 9)        # => returns all documents from any Sep.
 </code></pre>
 
 h3. Chaining
