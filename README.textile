@@ -1,6 +1,6 @@
 h1. Document File
 
-Document file is an object mapper for plain text documents. The documents look like the ones used in "jekyll":http://github.com/mojombo/jekyll. They consist of a preambel written in YAML (also called YAML front matter), and some content in the format you prefer, e.g. Textile. This enables you to write documents in your favorite editor and access the content and metadata in your Ruby scripts.
+Document file is an object mapper for plain text documents. The documents look like the ones used in "jekyll":http://github.com/mojombo/jekyll, "toto":http://github.com/cloudhead/toto or "Serious":http://github.com/colszowka/serious. They consist of a preambel written in YAML (also called YAML front matter), and some content in the format you prefer, e.g. Textile. This enables you to write documents in your favorite editor and access the content and metadata in your Ruby scripts.
 
 
 h2. Example
@@ -16,17 +16,17 @@ Documents look somehow like this. The part between the @---@s is the YAML front 
 
 <pre><code>---
 id: 1
-title: The shizzle!
-tags: [tag]
+title: Ruby is great
+tags: [programming, software]
 number_of_foos: 42
 status: published
 ---
 
-I like the flowers.
+I like Ruby.
 </code></pre>
 
 
-In order to access the documents in the folder, you have to create a document class that inherits from @DocumentFile::Base@. Inside the class definition, you must set the @documents_dir@ class variable in order to tell Document File where to look for files. In our little example, we will do the following:
+In order to access the documents in the folder, you have to create a document class that includes @DocumentFile@. Inside the class definition, you must set the @documents_dir@ class variable in order to tell Document File where to look for files. In our little example, we will do the following and assume the above file has been saved as @./documents/2010-09-13-ruby-stuff.textile@:
 
 <pre><code>require 'document_file'
 class MyDocument
@@ -40,38 +40,47 @@ h2. Available functionality
 
 h3. Dynamic finders
 
-<pre><code>doc = MyDocument.find_by_title("The shizzle!")    # => returns the document
-doc = MyDocument.find_by_number_of_foos(42)       # => returns the document
-doc = MyDocument.find_by_file_name("foo")         # => returns the document
+<pre><code>doc = MyDocument.find_by_title("Ruby is great")              # => returns the document
+doc = MyDocument.find_by_number_of_foos(42)                  # => returns the document
+doc = MyDocument.find_by_file_name("2010-09-13-ruby-stuff")  # => returns the document
 
 docs = MyDocument.find_all_by_status("published") # => [doc_1, doc_2, ...]
-docs = MyDocument.find_all_by_tag("tag")          # => [doc_1, doc_2, ...]
+docs = MyDocument.find_all_by_tag("programming")  # => [doc_1, doc_2, ...]
 </code></pre>
 
 
 h3. Listing documents by Array attributes
 
 <pre><code>docs = MyDocument.by_tags
-# => Returns {"tag" => [doc_1, doc_2, ...], "tag_2" => [doc_1, doc_3, ...],  ...}
+# => Returns {"programming" => [doc_1, doc_2, ...], "software" => [doc_1, doc_3, ...],  ...}
 </code></pre>
 
+
+h3. Listing documents by the date attribute
+
+Document file tries to parse the filename of your documents to create a date attribute. In order to use the automatic parsing, the filenames have to start with a date string, e.g. @2010-09-13-ruby-stuff.textile@. If you don't want to set the date in the filename, you can still do it in the YAML front matter with e.g. @date: 2010-09-10@.
+
+<pre><code>docs = MyDocument.find_all_by_date(2010)        # => returns all documents from 2010
+docs = MyDocument.find_all_by_date(2010, 9)     # => returns all documents from Sep., 2010
+docs = MyDocument.find_all_by_date(2010, 9, 13) # => returns all documents from Sep. 13th, 2010
+</code></pre>
 
 h3. Chaining
 
 <pre><code>docs = MyDocument.find_all_by_status("published").by_tags
-#   => Returns {"tag" => [doc_1, doc_2, ...], ...}
-docs = MyDocument.find_all_by_status("published").find_all_by_tag("tag")
+#   => Returns {"programming" => [doc_1, doc_2, ...], ...}
+docs = MyDocument.find_all_by_status("published").find_all_by_tag("programming")
 #   => Returns [doc_1, doc_2, ...]
 </code></pre>
 
 
 h3. Accessing the attributes of single documents
 
-<pre><code>doc.title                    # => "The shizzle!"
-doc.tags                     # => ["tag"]
-doc.content                  # => "I like the flowers."
-doc.file_name                # => "foo"
-doc.file_name_with_extension # => "foo.textile"
+<pre><code>doc.title                    # => "Ruby is great"
+doc.tags                     # => ["programming", "software"]
+doc.content                  # => "I like Ruby."
+doc.file_name                # => "2010-08-12-my-post"
+doc.file_name_with_extension # => "2010-08-12-my-post.textile"
 doc.file_extension           # => ".textile"
 </code></pre>
 
