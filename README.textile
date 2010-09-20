@@ -40,9 +40,9 @@ h2. Available functionality
 
 h3. Dynamic finders
 
-<pre><code>doc = MyDocument.find_by_title("Ruby is great")              # => returns the document
-doc = MyDocument.find_by_number_of_foos(42)                  # => returns the document
-doc = MyDocument.find_by_file_name("2010-09-13-ruby-stuff")  # => returns the document
+<pre><code>doc = MyDocument.find_by_title("Ruby is great")                # => returns the document
+doc = MyDocument.find_by_number_of_foos(42)                    # => returns the document
+doc = MyDocument.find_by_file_name("2010-09-13-ruby-stuff")    # => returns the document
 
 docs = MyDocument.find_all_by_status("published")              # => [doc_1, doc_2, ...]
 docs = MyDocument.find_all_by_tag("programming")               # => [doc_1, doc_2, ...]
