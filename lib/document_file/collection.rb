@@ -2,6 +2,12 @@ require 'active_support/inflector'
 
 module DocumentFile
   class Collection < Array
+    attr_writer :total
+
+    def total
+      @total || length
+    end
+
     def <<(document)
       self.class.ensure_document(document)
       define_dynamic_finders document.data
@@ -87,19 +93,20 @@ module DocumentFile
         singular_attribute = attribute
       end
       find_all_by_attribute = <<-eos
-        def find_all_by_#{singular_attribute}(attribute)
-          if respond_to? :by_#{attribute}
+        def find_all_by_#{singular_attribute}(attribute, options = {})
+          documents = if respond_to?(:by_#{attribute})
             by_#{attribute}[attribute]
           else
-            documents = select do |document|
+            select do |document|
               if document.respond_to? :#{attribute}
                 document.#{attribute} == attribute
               else
                 false
               end
             end
-            Collection.new documents
           end
+
+          self.class.new(documents).offset_and_limitize(options[:offset], options[:limit])
         end
       eos
       instance_eval find_all_by_attribute
@@ -115,6 +122,20 @@ module DocumentFile
         end
       eos
       instance_eval find_by_attribute
+    end
+
+    def offset_and_limitize(offset, limit)
+      documents = self
+      total_size = documents.length
+      if offset
+        documents = documents.last(length - offset)
+      end
+      if limit
+        documents = documents.first(limit)
+      end
+      self.class.new(documents).tap do |col|
+        col.total = total_size
+      end
     end
   end
 end

@@ -194,4 +194,24 @@ describe DocumentFile::Collection do
       assert_equal 'Yes!', document_file.special_attribute
     end
   end
+
+  describe 'when using a finder with offset or limit' do
+    it 'should respect the offset' do
+      document_files = MyDocument.find_all_by_tag 'tag', :offset => 1
+      assert_equal 1, document_files.size
+      assert_equal 2, document_files.first.id
+    end
+
+    it 'should respect the limit' do
+      document_files = MyDocument.find_all_by_tag 'tag', :limit => 1
+      assert_equal 1, document_files.size
+      assert_equal 1, document_files.first.id
+    end
+
+    it 'should still deliver the total number of documents' do
+      document_files = MyDocument.find_all_by_tag 'tag', :offset => 1
+      assert_equal 1, document_files.size
+      assert_equal 2, document_files.total
+    end
+  end
 end
