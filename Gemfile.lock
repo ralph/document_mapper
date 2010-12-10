@@ -7,7 +7,7 @@ PATH
 GEM
   remote: http://rubygems.org/
   specs:
-    activesupport (3.0.0)
+    activesupport (3.0.3)
 
 PLATFORMS
   ruby
