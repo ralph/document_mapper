@@ -64,8 +64,10 @@ private
   module ClassMethods
     @@documents = nil
 
-    def all
-      return @@documents if @@documents
+    def all(options = {})
+      offset = options[:offset]
+      limit = options[:limit]
+      return @@documents.offset_and_limitize(offset, limit) if @@documents
       reload!
     end
 

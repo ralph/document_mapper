@@ -213,5 +213,11 @@ describe DocumentFile::Collection do
       assert_equal 1, document_files.size
       assert_equal 2, document_files.total
     end
+
+    it 'should work on the root collection' do
+      document_files = MyDocument.all :limit => 1
+      assert_equal 1, document_files.size
+      assert_equal 1, document_files.first.id
+    end
   end
 end
