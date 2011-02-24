@@ -6,8 +6,8 @@ describe MyDocument do
       @document_files = MyDocument.all
     end
 
-    it 'should return a DocumentFile::Collection' do
-      assert_equal DocumentFile::Collection, @document_files.class
+    it 'should return a DocumentMapper::Collection' do
+      assert_equal DocumentMapper::Collection, @document_files.class
     end
   
     it "should find all document_files" do
@@ -25,17 +25,17 @@ describe MyDocument do
     end
 
     it 'should initialize the content' do
-      assert_equal "I like the flowers.\n", @document_file.content
+      assert_equal "I like being the demo text.\n", @document_file.content
     end
 
     it 'should intitialize Strings from the front matter' do
       assert_equal String, @document_file.title.class
-      assert_equal 'The shizzle!', @document_file.title
+      assert_equal 'Some fancy title', @document_file.title
     end
 
     it 'should intitialize Arrays from the front matter' do
       assert_equal Array, @document_file.tags.class
-      assert_equal ['tag'], @document_file.tags
+      assert_equal ['ruby'], @document_file.tags
     end
 
     it 'should intitialize integers from the front matter' do

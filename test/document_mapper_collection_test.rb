@@ -1,9 +1,9 @@
 require './test/test_base'
 
-describe DocumentFile::Collection do
+describe DocumentMapper::Collection do
   describe 'when adding documents to the collection' do
     before do
-      @collection = DocumentFile::Collection.new
+      @collection = DocumentMapper::Collection.new
       @document = MyDocument.new('2010-08-08-test-document-file.textile')
     end
 
@@ -14,7 +14,7 @@ describe DocumentFile::Collection do
         assert true
         return
       end
-      assert false, 'collection falsely accepted a non DocumentFile datatype'
+      assert false, 'collection falsely accepted a non DocumentMapper datatype'
     end
 
     it 'should accept documents' do
@@ -55,13 +55,13 @@ describe DocumentFile::Collection do
   describe 'when creating a collection from an Array' do
     it 'should not accept non-documents' do
       assert_raises ArgumentError do
-        DocumentFile::Collection.new ['a string', 'some more']
+        DocumentMapper::Collection.new ['a string', 'some more']
       end
     end
 
     it 'should accept documents' do
       document = MyDocument.new '2010-08-08-test-document-file.textile'
-      collection = DocumentFile::Collection.new [document]
+      collection = DocumentMapper::Collection.new [document]
       assert document, collection.first
     end
   end
@@ -69,7 +69,7 @@ describe DocumentFile::Collection do
   describe 'when finding documents by date' do
     it 'should return a collection' do
       documents = MyDocument.find_all_by_date 2010
-      assert_equal documents.class, DocumentFile::Collection
+      assert_equal documents.class, DocumentMapper::Collection
     end
 
     it 'should return all documents with the year specified' do
@@ -119,13 +119,13 @@ describe DocumentFile::Collection do
     end
 
     it 'should use the tags as Hash keys' do
-      assert_equal Set.new(['tag', 'tug']), MyDocument.by_tags.keys.to_set
+      assert_equal Set.new(['ruby', 'rails']), MyDocument.by_tags.keys.to_set
     end
 
     it 'should use the document_files as Hash values' do
       document_files = MyDocument.by_tags
-      assert_equal Set.new([1, 2]), document_files['tag'].map(&:id).to_set
-      assert_equal Set.new([2]), document_files['tug'].map(&:id).to_set
+      assert_equal Set.new([1, 2]), document_files['ruby'].map(&:id).to_set
+      assert_equal Set.new([2]), document_files['rails'].map(&:id).to_set
     end
 
     it 'should not be confused by attributes that only some documents have' do
@@ -138,18 +138,18 @@ describe DocumentFile::Collection do
   end
 
   describe 'when finding all document_files by an Array attribute value' do
-    it 'should return a DocumentFile::Collection' do
-      klass = MyDocument.find_all_by_tag('tag').class
-      assert_equal DocumentFile::Collection, klass
+    it 'should return a DocumentMapper::Collection' do
+      klass = MyDocument.find_all_by_tag('ruby').class
+      assert_equal DocumentMapper::Collection, klass
     end
 
     it 'should containt documents' do
-      assert_equal MyDocument, MyDocument.find_all_by_tag('tag').first.class
+      assert_equal MyDocument, MyDocument.find_all_by_tag('ruby').first.class
     end
 
     it 'should return the right documents' do
-      assert_equal [1, 2], MyDocument.find_all_by_tag('tag').map(&:id)
-      assert_equal [2], MyDocument.find_all_by_tag('tug').map(&:id)
+      assert_equal [1, 2], MyDocument.find_all_by_tag('ruby').map(&:id)
+      assert_equal [2], MyDocument.find_all_by_tag('rails').map(&:id)
     end
   end
 
@@ -158,8 +158,8 @@ describe DocumentFile::Collection do
       @collection = MyDocument.find_all_by_status(:published)
     end
 
-    it 'should return a DocumentFile::Collection' do
-      assert_equal DocumentFile::Collection, @collection.class
+    it 'should return a DocumentMapper::Collection' do
+      assert_equal DocumentMapper::Collection, @collection.class
     end
 
     it 'should containt documents' do
@@ -178,7 +178,7 @@ describe DocumentFile::Collection do
 
   describe 'when finding a document_file' do
     it 'should find the right document_file by an attribute' do
-      title = 'The shizzle!'
+      title = 'Some fancy title'
       document_file = MyDocument.find_by_title(title)
       assert_equal title, document_file.title
     end
@@ -197,19 +197,19 @@ describe DocumentFile::Collection do
 
   describe 'when using a finder with offset or limit' do
     it 'should respect the offset' do
-      document_files = MyDocument.find_all_by_tag 'tag', :offset => 1
+      document_files = MyDocument.find_all_by_tag 'ruby', :offset => 1
       assert_equal 1, document_files.size
       assert_equal 2, document_files.first.id
     end
 
     it 'should respect the limit' do
-      document_files = MyDocument.find_all_by_tag 'tag', :limit => 1
+      document_files = MyDocument.find_all_by_tag 'ruby', :limit => 1
       assert_equal 1, document_files.size
       assert_equal 1, document_files.first.id
     end
 
     it 'should still deliver the total number of documents' do
-      document_files = MyDocument.find_all_by_tag 'tag', :offset => 1
+      document_files = MyDocument.find_all_by_tag 'ruby', :offset => 1
       assert_equal 1, document_files.size
       assert_equal 2, document_files.total
     end

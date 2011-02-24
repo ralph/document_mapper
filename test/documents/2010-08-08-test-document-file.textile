@@ -1,10 +1,10 @@
 ---
 id: 1
-title: The shizzle!
-tags: [tag]
+title: Some fancy title
+tags: [ruby]
 number_of_foos: 42
 authors: [Frank, Bertha]
 status: :published
 ---
 
-I like the flowers.
+I like being the demo text.

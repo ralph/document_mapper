@@ -1,10 +1,10 @@
 require 'active_support/core_ext/class'
 require 'active_support/concern.rb'
-require 'document_file/collection'
-require 'document_file/version'
+require 'document_mapper/collection'
+require 'document_mapper/version'
 require 'yaml'
 
-module DocumentFile
+module DocumentMapper
   extend ActiveSupport::Concern
 
   included do

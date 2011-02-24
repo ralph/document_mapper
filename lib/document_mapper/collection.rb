@@ -1,6 +1,6 @@
 require 'active_support/inflector'
 
-module DocumentFile
+module DocumentMapper
   class Collection < Array
     attr_writer :total
 
@@ -31,7 +31,7 @@ module DocumentFile
     end
 
     def self.ensure_document(document)
-      raise ArgumentError unless document.class.include? DocumentFile
+      raise ArgumentError unless document.class.include? DocumentMapper
     end
 
     def find_all_by_date(*args)

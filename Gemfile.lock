@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    document_file (0.0.8)
+    document_mapper (0.0.9)
       activesupport (~> 3.0.0)
 
 GEM
@@ -13,4 +13,4 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  document_file!
+  document_mapper!

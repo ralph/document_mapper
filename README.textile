@@ -1,6 +1,6 @@
-h1. Document File
+h1. Document Mapper
 
-Document file is an object mapper for plain text documents. The documents look like the ones used in "jekyll":http://github.com/mojombo/jekyll, "toto":http://github.com/cloudhead/toto or "Serious":http://github.com/colszowka/serious. They consist of a preambel written in YAML (also called YAML front matter), and some content in the format you prefer, e.g. Textile. This enables you to write documents in your favorite editor and access the content and metadata in your Ruby scripts.
+Document mapper is an object mapper for plain text documents. The documents look like the ones used in "jekyll":http://github.com/mojombo/jekyll, "toto":http://github.com/cloudhead/toto or "Serious":http://github.com/colszowka/serious. They consist of a preambel written in YAML (also called YAML front matter), and some content in the format you prefer, e.g. Textile. This enables you to write documents in your favorite editor and access the content and metadata in your Ruby scripts.
 
 
 h2. Example
@@ -12,7 +12,7 @@ As an example let's assume we have a directory called "documents" containing the
 |-bar.textile
 </code></pre>
 
-Documents look somehow like this. The part between the @---@s is the YAML front matter. After the second @---@, there is one blank line, followed by the content of the file. All items in the YAML front matter and the content are accessible by Document File.
+Documents look somehow like this. The part between the @---@s is the YAML front matter. After the second @---@, there is one blank line, followed by the content of the file. All items in the YAML front matter and the content are accessible by Document Mapper.
 
 <pre><code>---
 id: 1
@@ -26,11 +26,11 @@ I like Ruby.
 </code></pre>
 
 
-In order to access the documents in the folder, you have to create a document class that includes @DocumentFile@. Inside the class definition, you must set the @documents_dir@ class variable in order to tell Document File where to look for files. In our little example, we will do the following and assume the above file has been saved as @./documents/2010-09-13-ruby-stuff.textile@:
+In order to access the documents in the folder, you have to create a document class that includes @DocumentMapper@. Inside the class definition, you must set the @documents_dir@ class variable in order to tell Document Mapper where to look for files. In our little example, we will do the following and assume the above file has been saved as @./documents/2010-09-13-ruby-stuff.textile@:
 
 <pre><code>require 'document_file'
 class MyDocument
-  include DocumentFile
+  include DocumentMapper
   self.documents_dir = './documents'
 end
 </code></pre>
