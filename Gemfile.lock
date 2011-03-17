@@ -3,11 +3,13 @@ PATH
   specs:
     document_mapper (0.0.9)
       activesupport (~> 3.0.0)
+      i18n (~> 0.5.0)
 
 GEM
   remote: http://rubygems.org/
   specs:
     activesupport (3.0.4)
+    i18n (0.5.0)
 
 PLATFORMS
   ruby

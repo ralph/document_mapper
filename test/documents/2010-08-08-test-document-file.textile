@@ -2,8 +2,6 @@
 id: 1
 title: Some fancy title
 tags: [ruby]
-number_of_foos: 42
-authors: [Frank, Bertha]
 status: :published
 ---
 
