@@ -1,5 +1,8 @@
+require 'active_model'
+
 module DocumentMapper
   class Document
+    include ActiveModel::AttributeMethods
 
     attr_accessor :file_path, :attributes, :content
 
@@ -24,17 +27,6 @@ module DocumentMapper
     def self.select(options = {})
     end
 
-    def define_attribute_method(method_name)
-      self.class.module_eval <<-STR, __FILE__, __LINE__ + 1
-        if method_defined?(:#{method_name})
-          undef :#{method_name}
-        end
-        def #{method_name}
-          self.attributes['#{method_name}']
-        end
-      STR
-    end
-
     def read_yaml
       @content = File.read(file_path)
 
@@ -50,7 +42,14 @@ module DocumentMapper
         rescue NoMethodError => err
         end
       end
-      self.attributes.keys.each { |attr| define_attribute_method attr }
+      self.class.define_attribute_methods self.attributes.keys
+      self.attributes.keys.each { |attr| define_read_method attr }
+    end
+
+  private
+    def define_read_method(attr_name)
+      access_code = "attributes['#{attr_name}']"
+      self.class.generated_attribute_methods.module_eval("def #{attr_name}; #{access_code}; end", __FILE__, __LINE__)
     end
   end
 end
