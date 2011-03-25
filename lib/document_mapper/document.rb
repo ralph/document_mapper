@@ -13,7 +13,7 @@ module DocumentMapper
         raise FileNotFoundException
       end
       self.new.tap do |document|
-        document.file_path = file_path
+        document.file_path = File.expand_path(file_path)
         document.read_yaml
       end
     end

@@ -21,7 +21,7 @@ describe Document do
       assert_equal ['ruby'], @document.tags
       assert_equal :published, @document.status
       assert_equal '2010-08-08', @document.date.to_s
-      assert_equal @file_path, @document.file_path
+      assert_equal File.expand_path(@file_path), @document.file_path
     end
   end
 
