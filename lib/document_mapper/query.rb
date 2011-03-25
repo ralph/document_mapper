@@ -2,10 +2,11 @@ module DocumentMapper
   class Query
     def initialize(model)
       @model = model
+      @where = {}
     end
 
     def where(hash)
-      @where = hash
+      @where.merge! hash
       self
     end
 

@@ -2,6 +2,10 @@ require './test/test_base'
 include DocumentMapper
 
 describe Document do
+  before do
+    Document.reset
+  end
+
   describe 'loading a document from file' do
     before do
       @file_path = 'test/documents/2010-08-08-test-document-file.textile'
@@ -25,15 +29,45 @@ describe Document do
     end
   end
 
+  describe 'getting all Documents' do
+    it 'should return all documents' do
+      file_name_1 = 'test/documents/2010-08-08-test-document-file.textile'
+      @document_1 = Document.from_file(file_name_1)
+      file_name_2 = 'test/documents/2010-08-09-another-test-document.textile'
+      @document_2 = Document.from_file(file_name_2)
+      assert_equal [@document_1, @document_2], Document.all
+    end
+  end
+
+  describe 'resetting the Document class' do
+    it 'should clear all documents' do
+      file_name_1 = 'test/documents/2010-08-08-test-document-file.textile'
+      @document_1 = Document.from_file(file_name_1)
+      assert_equal [@document_1], Document.all
+      Document.reset
+      assert_equal [], Document.all
+    end
+  end
+
   describe 'using where queries' do
     before do
-      file_name = 'test/documents/2010-08-08-test-document-file.textile'
-      @document = Document.from_file(file_name)
+      file_name_1 = 'test/documents/2010-08-08-test-document-file.textile'
+      @document_1 = Document.from_file(file_name_1)
+      file_name_2 = 'test/documents/2010-08-09-another-test-document.textile'
+      @document_2 = Document.from_file(file_name_2)
     end
 
-    # it 'should return the right documents' do
-    #   found_documents = Document.where(:title => @document.attributes['title']).first
-    #   assert_equal @document, found_documents
-    # end
+    it 'should return the right documents' do
+      found_document = Document.where(:title => @document_1.title).first
+      assert_equal @document_1, found_document
+      found_document = Document.where(:title => @document_2.title).first
+      assert_equal @document_2, found_document
+    end
+
+    it 'should be chainable' do
+      document_proxy = Document.where(:title => @document_1.title)
+      document_proxy.where(:id => @document_1.id)
+      assert_equal @document_1, document_proxy.first
+    end
   end
 end
