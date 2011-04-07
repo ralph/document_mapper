@@ -24,8 +24,14 @@ describe Document do
       assert_equal 'Some fancy title', @document.title
       assert_equal ['ruby'], @document.tags
       assert_equal :published, @document.status
-      assert_equal '2010-08-08', @document.date.to_s
       assert_equal File.expand_path(@file_path), @document.file_path
+    end
+
+    it 'should get the date from the filename' do
+      assert_equal '2010-08-08', @document.date.to_s
+      assert_equal 2010, @document.date.year
+      assert_equal 8, @document.date.month
+      assert_equal 8, @document.date.day
     end
   end
 
