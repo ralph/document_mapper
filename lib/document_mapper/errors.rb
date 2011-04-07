@@ -1,0 +1,2 @@
+class FileNotFoundError < StandardError
+end

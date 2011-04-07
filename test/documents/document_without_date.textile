@@ -1,0 +1,6 @@
+---
+id: 4
+title: This document has no date
+---
+
+This document has no date at all.

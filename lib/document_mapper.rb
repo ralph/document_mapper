@@ -1,8 +1,8 @@
 require 'active_support/core_ext/class'
-require 'active_support/concern.rb'
-require 'document_mapper/version'
+require 'active_support/concern'
 require 'yaml'
 
+require 'document_mapper/errors'
 require 'document_mapper/attribute_methods'
 require 'document_mapper/yaml_parsing'
 require 'document_mapper/document'

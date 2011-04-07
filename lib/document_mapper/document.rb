@@ -1,10 +1,14 @@
 require 'active_model'
+require 'forwardable'
 
 module DocumentMapper
   class Document
     include ActiveModel::AttributeMethods
     include AttributeMethods::Read
     include YamlParsing
+
+    extend Forwardable
+    def_delegators :date, :year, :month, :day
 
     attr_accessor :file_path, :attributes, :content
     @@documents = []
@@ -15,7 +19,7 @@ module DocumentMapper
 
     def self.from_file(file_path)
       if !File.exist? file_path
-        raise FileNotFoundException
+        raise FileNotFoundError
       end
       self.new.tap do |document|
         document.file_path = File.expand_path(file_path)
@@ -36,7 +40,7 @@ module DocumentMapper
       documents = @@documents.dup
       options[:where].each do |attribute, value|
         documents.select! do |document|
-          document.attributes[attribute.to_s] == value
+          document.send(attribute) == value
         end
       end
       documents
