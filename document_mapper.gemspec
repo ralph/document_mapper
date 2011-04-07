@@ -9,7 +9,6 @@ Gem::Specification.new do |s|
   s.homepage          = 'http://github.com/ralph/document_mapper'
   s.email             = 'ralph@rvdh.de'
   s.authors           = [ 'Ralph von der Heyden' ]
-  s.has_rdoc          = false
 
   s.files             = %w( LICENSE README.textile )
   s.files            += Dir.glob("lib/**/*")
