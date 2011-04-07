@@ -53,17 +53,26 @@ describe Document do
         assert_equal nil, @document.date
       end
     end
+
+    describe 'loading a documents directory' do
+      it 'should load all the documents in that directory' do
+        Document.directory = 'test/documents'
+        assert_equal [1,2,3,4], Document.all.map(&:id)
+      end
+    end
   end
 
   describe 'getting all Documents' do
     it 'should return all documents' do
-      assert_equal [sample_document_1, sample_document_2], Document.all
+      all_documents = [sample_document_1, sample_document_2]
+      assert_equal all_documents, Document.all
     end
   end
 
   describe 'resetting the Document class' do
     it 'should clear all documents' do
-      assert_equal [sample_document_1], Document.all
+      one_document = sample_document_1
+      assert_equal [one_document], Document.all
       Document.reset
       assert_equal [], Document.all
     end

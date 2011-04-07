@@ -10,7 +10,7 @@ module DocumentMapper
     extend Forwardable
     def_delegators :date, :year, :month, :day
 
-    attr_accessor :file_path, :attributes, :content
+    attr_accessor :attributes, :content, :directory, :file_path
     @@documents = []
 
     def self.reset
@@ -25,6 +25,16 @@ module DocumentMapper
         document.file_path = File.expand_path(file_path)
         document.read_yaml
         @@documents << document
+      end
+    end
+
+    def self.directory=(new_directory)
+      raise FileNotFoundError unless File.directory?(new_directory)
+      self.reset
+      @@directory = Dir.new File.expand_path(new_directory)
+      @@directory.each do |file|
+        next if ['.', '..'].include? file
+        self.from_file [@@directory.path, file].join('/')
       end
     end
 
