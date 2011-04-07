@@ -46,6 +46,14 @@ module DocumentMapper
       Query.new(self).sort(field)
     end
 
+    def self.offset(number)
+      Query.new(self).offset(number)
+    end
+
+    def self.limit(number)
+      Query.new(self).limit(number)
+    end
+
     def self.select(options = {})
       documents = @@documents.dup
       options[:where].each do |attribute, value|

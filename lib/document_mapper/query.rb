@@ -15,6 +15,16 @@ module DocumentMapper
       self
     end
 
+    def offset(number)
+      @offset = number
+      self
+    end
+
+    def limit(number)
+      @limit = number
+      self
+    end
+
     def first
       self.all.first
     end
@@ -24,7 +34,14 @@ module DocumentMapper
     end
 
     def all
-      @model.select(:where => @where, :sort => @sort)
+      result = @model.select(:where => @where, :sort => @sort)
+      if @offset.present?
+        result = result.last(result.size - @offset)
+      end
+      if @limit.present?
+        result = result.first(@limit)
+      end
+      result
     end
   end
 end

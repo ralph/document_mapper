@@ -69,6 +69,24 @@ describe Document do
     end
   end
 
+  describe 'using offset and limit' do
+    before do
+      Document.directory = 'test/documents'
+    end
+
+    it 'should limit the documents to the number specified' do
+      assert_equal [1,2], Document.limit(2).all.map(&:id)
+    end
+
+    it 'should offset the documents by the number specified' do
+      assert_equal [3,4], Document.offset(2).all.map(&:id)
+    end
+
+    it 'should support offset and limit at the same time' do
+      assert_equal [2,3], Document.offset(1).limit(2).all.map(&:id)
+    end
+  end
+
   describe 'resetting the Document class' do
     it 'should clear all documents' do
       one_document = sample_document_1
