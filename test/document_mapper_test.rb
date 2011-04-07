@@ -65,10 +65,21 @@ describe Document do
     end
   end
 
-  describe 'getting all Documents' do
+  describe 'getting all/the first/the last Document(s)' do
+    before do
+      @all_documents = [sample_document_1, sample_document_2]
+    end
+
     it 'should return all documents' do
-      all_documents = [sample_document_1, sample_document_2]
-      assert_equal all_documents, Document.all
+      assert_equal @all_documents, Document.all
+    end
+
+    it 'should return the first document' do
+      assert_equal @all_documents.first, Document.first
+    end
+
+    it 'should return the last document' do
+      assert_equal @all_documents.last, Document.last
     end
   end
 

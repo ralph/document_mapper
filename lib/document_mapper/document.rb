@@ -64,6 +64,14 @@ module DocumentMapper
       @@documents
     end
 
+    def self.first
+      @@documents.first
+    end
+
+    def self.last
+      @@documents.last
+    end
+
     def ==(other_document)
       return false unless other_document.is_a? Document
       self.file_path == other_document.file_path
