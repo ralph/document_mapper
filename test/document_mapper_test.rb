@@ -123,6 +123,12 @@ describe Document do
       expected_documents = [sample_document_1, sample_document_2]
       assert_equal expected_documents.map(&:id), found_documents.map(&:id)
     end
+
+    it 'should not be confused by attributes not present in all documents' do
+      Document.directory = 'test/documents'
+      result = Document.where(:seldom_attribute => 'is seldom').all
+      assert_equal [4], result.map(&:id)
+    end
   end
 
   def sample_file_path_1
