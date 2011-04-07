@@ -1,14 +1,10 @@
 require 'active_model'
-require 'forwardable'
 
 module DocumentMapper
   class Document
     include ActiveModel::AttributeMethods
     include AttributeMethods::Read
     include YamlParsing
-
-    extend Forwardable
-    def_delegators :date, :year, :month, :day
 
     attr_accessor :attributes, :content, :directory, :file_path
     @@documents = []
@@ -58,7 +54,7 @@ module DocumentMapper
       documents = @@documents.dup
       options[:where].each do |attribute, value|
         documents.select! do |document|
-          document.send(attribute) == value
+          document.send(attribute) == value if document.respond_to? attribute
         end
       end
       documents

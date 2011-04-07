@@ -51,6 +51,9 @@ describe Document do
       it 'should not freak out if there is no date' do
         @document = sample_document_without_date
         assert_equal nil, @document.date
+        assert_equal nil, @document.year
+        assert_equal nil, @document.month
+        assert_equal nil, @document.day
       end
     end
 
