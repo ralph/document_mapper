@@ -3,14 +3,7 @@ h1. Document Mapper
 Document mapper is an object mapper for plain text documents. The documents look like the ones used in "jekyll":http://github.com/mojombo/jekyll, "toto":http://github.com/cloudhead/toto or "Serious":http://github.com/colszowka/serious. They consist of a preambel written in YAML (also called YAML front matter), and some content in the format you prefer, e.g. Textile. This enables you to write documents in your favorite editor and access the content and metadata in your Ruby scripts.
 
 
-h2. Example
-
-As an example let's assume we have a directory called "documents" containing the following files:
-
-<pre><code>documents/
-|-foo.textile
-|-bar.textile
-</code></pre>
+h2. Step-by-step tutorial
 
 Documents look somehow like this. The part between the @---@s is the YAML front matter. After the second @---@, there is one blank line, followed by the content of the file. All items in the YAML front matter and the content are accessible by Document Mapper.
 
@@ -26,57 +19,18 @@ I like Ruby.
 </code></pre>
 
 
-In order to access the documents in the folder, you have to create a document class that includes @DocumentMapper@. Inside the class definition, you must set the @documents_dir@ class variable in order to tell Document Mapper where to look for files. In our little example, we will do the following and assume the above file has been saved as @./documents/2010-09-13-ruby-stuff.textile@:
+In order to access the values in the front matter, you have to create a class that includes @DocumentMapper@. 
 
-<pre><code>require 'document_file'
+<pre><code>require 'document_mapper'
 class MyDocument
-  include DocumentMapper
-  self.documents_dir = './documents'
+  include DocumentMapper::Document
 end
 </code></pre>
 
 
-h2. Available functionality
+h3. Initializing single documents
 
-h3. Dynamic finders
-
-<pre><code>doc = MyDocument.find_by_title("Ruby is great")                # => returns the document
-doc = MyDocument.find_by_number_of_foos(42)                    # => returns the document
-doc = MyDocument.find_by_file_name("2010-09-13-ruby-stuff")    # => returns the document
-
-docs = MyDocument.find_all_by_status("published")              # => [doc_1, doc_2, ...]
-docs = MyDocument.find_all_by_tag("programming")               # => [doc_1, doc_2, ...]
-docs = MyDocument.find_all_by_tag("programming", :offset => 1) # => [doc_2, ...]
-docs = MyDocument.find_all_by_tag("programming", :limit => 2)  # => [doc_1, doc_2]
-</code></pre>
-
-
-h3. Listing documents by Array attributes
-
-<pre><code>docs = MyDocument.by_tags
-# => Returns {"programming" => [doc_1, doc_2, ...], "software" => [doc_1, doc_3, ...],  ...}
-</code></pre>
-
-
-h3. Listing documents by the date attribute
-
-Document file tries to parse the filename of your documents to create a date attribute. In order to use the automatic parsing, the filenames have to start with a date string, e.g. @2010-09-13-ruby-stuff.textile@. If you don't want to set the date in the filename, you can still do it in the YAML front matter with e.g. @date: 2010-09-10@.
-
-<pre><code>docs = MyDocument.find_all_by_date(2010)          # => returns all documents from 2010
-docs = MyDocument.find_all_by_date(2010, 9)       # => returns all documents from Sep., 2010
-docs = MyDocument.find_all_by_date(2010, 9, 13)   # => returns all documents from Sep. 13th, 2010
-docs = MyDocument.find_all_by_date('*', 9, 13)    # => returns all documents from any Sep. 13th
-docs = MyDocument.find_all_by_date(2010, '*', 13) # => returns all documents from any 13th of 2010
-docs = MyDocument.find_all_by_date('*', '*', 13)  # => returns all documents from any 13th
-docs = MyDocument.find_all_by_date('*', 9)        # => returns all documents from any Sep.
-</code></pre>
-
-h3. Chaining
-
-<pre><code>docs = MyDocument.find_all_by_status("published").by_tags
-#   => Returns {"programming" => [doc_1, doc_2, ...], ...}
-docs = MyDocument.find_all_by_status("published").find_all_by_tag("programming")
-#   => Returns [doc_1, doc_2, ...]
+<pre><code>doc = MyDocument.from_file('./documents/document-file.textile')
 </code></pre>
 
 
@@ -85,26 +39,71 @@ h3. Accessing the attributes of single documents
 <pre><code>doc.title                    # => "Ruby is great"
 doc.tags                     # => ["programming", "software"]
 doc.content                  # => "I like Ruby."
-doc.file_name                # => "2010-08-12-my-post"
-doc.file_name_with_extension # => "2010-08-12-my-post.textile"
-doc.file_extension           # => ".textile"
 </code></pre>
 
-h3. Initializing single documents
 
-This will even work without setting the @documents_dir@ class variable.
+h3. Date recognition
 
-<pre><code>doc = MyDocument.new('./documents/document-file.textile')
+You can either set the date of a document in the YAML front matter, or you can use the file name, if you want to. A file named @2010-08-07-test-document-file.textile@ will return a date like this:
+
+<pre><code>doc.date                     # => #<Date: 2010-08-08 (4910833/2,0,2299161)>
+doc.year                     # => 2010
+doc.month                    # => 08
+doc.day                      # => 07
 </code></pre>
+
+
+h3. Working with directories
+
+As an example let's assume we have a directory called "documents" containing the following files:
+
+<pre><code>documents/
+|-foo.textile
+|-bar.textile
+</code></pre>
+
+
+In order to work with a whole directory of files, we have to use the @directory@ method:
+
+<pre><code>require 'document_mapper'
+class MyDocument
+  include DocumentMapper::Document
+  self.directory = 'documents'
+end
+</code></pre>
+
+Now we can receive all available documents or filter like that:
+
+<pre><code>MyDocument.all
+MyDocument.first
+MyDocument.last
+MyDocument.limit(2)
+MyDocument.offset(2)
+MyDocument.where(:title => 'Some title').first
+MyDocument.where(:status => 'published').all
+MyDocument.where(:year => 2010).all
+</code></pre>
+
+Not all of the documents in the directory need to have all of the attributes. You can add single attributes to single documents, and the queries will only return those documents where the attributes match.
+
+h3. Chaining
+
+Chaining works with all available query methods, e.g.:
+
+<pre><code>MyDocument.where(:status => 'published').where(:title => 'Some title').limit(2).all
+</code></pre>
+
 
 h3. Reloading
 
 If any of the files change, you must manually reload them:
-<pre><code>MyDocument.reload!
+
+<pre><code>MyDocument.reload
 </code></pre>
 
 
 h2. Author
 
 Written by "Ralph von der Heyden":http://rvdh.de. Don't hesitate to contact me if you have any further questions.
+
 Follow me on "Twitter":http://twitter.com/ralph!
