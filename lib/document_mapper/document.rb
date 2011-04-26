@@ -49,6 +49,16 @@ module DocumentMapper
         end
       end
 
+      def select(options = {})
+        documents = @@documents.dup
+        options[:where].each do |attribute, value|
+          documents.select! do |document|
+            document.send(attribute) == value if document.respond_to? attribute
+          end
+        end
+        documents
+      end
+
       def where(hash)
         Query.new(self).where(hash)
       end
@@ -63,16 +73,6 @@ module DocumentMapper
 
       def limit(number)
         Query.new(self).limit(number)
-      end
-
-      def select(options = {})
-        documents = @@documents.dup
-        options[:where].each do |attribute, value|
-          documents.select! do |document|
-            document.send(attribute) == value if document.respond_to? attribute
-          end
-        end
-        documents
       end
 
       def all

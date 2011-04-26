@@ -116,29 +116,31 @@ describe MyDocument do
       @document_2 = sample_document_2
     end
 
-    it 'should return the right documents' do
-      found_document = MyDocument.where(:title => @document_1.title).first
-      assert_equal @document_1, found_document
-      found_document = MyDocument.where(:title => @document_2.title).first
-      assert_equal @document_2, found_document
-    end
+    describe 'with an equal operator' do
+      it 'should return the right documents' do
+        found_document = MyDocument.where(:title => @document_1.title).first
+        assert_equal @document_1, found_document
+        found_document = MyDocument.where(:title => @document_2.title).first
+        assert_equal @document_2, found_document
+      end
 
-    it 'should be chainable' do
-      document_proxy = MyDocument.where(:title => @document_1.title)
-      document_proxy.where(:id => @document_1.id)
-      assert_equal @document_1, document_proxy.first
-    end
+      it 'should be chainable' do
+        document_proxy = MyDocument.where(:title => @document_1.title)
+        document_proxy.where(:id => @document_1.id)
+        assert_equal @document_1, document_proxy.first
+      end
 
-    it 'should work with dates' do
-      found_documents = MyDocument.where(:year => 2010).all
-      expected_documents = [sample_document_1, sample_document_2]
-      assert_equal expected_documents.map(&:id), found_documents.map(&:id)
-    end
+      it 'should work with dates' do
+        found_documents = MyDocument.where(:year => 2010).all
+        expected_documents = [sample_document_1, sample_document_2]
+        assert_equal expected_documents.map(&:id), found_documents.map(&:id)
+      end
 
-    it 'should not be confused by attributes not present in all documents' do
-      MyDocument.directory = 'test/documents'
-      result = MyDocument.where(:seldom_attribute => 'is seldom').all
-      assert_equal [4], result.map(&:id)
+      it 'should not be confused by attributes not present in all documents' do
+        MyDocument.directory = 'test/documents'
+        result = MyDocument.where(:seldom_attribute => 'is seldom').all
+        assert_equal [4], result.map(&:id)
+      end
     end
   end
 
