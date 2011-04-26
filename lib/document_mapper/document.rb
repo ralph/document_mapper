@@ -1,80 +1,86 @@
 require 'active_model'
 
 module DocumentMapper
-  class Document
+  module Document
+    extend ActiveSupport::Concern
     include ActiveModel::AttributeMethods
     include AttributeMethods::Read
     include YamlParsing
 
     attr_accessor :attributes, :content, :directory, :file_path
-    @@documents = []
 
-    def self.reset
+    included do
       @@documents = []
-    end
-
-    def self.from_file(file_path)
-      if !File.exist? file_path
-        raise FileNotFoundError
-      end
-      self.new.tap do |document|
-        document.file_path = File.expand_path(file_path)
-        document.read_yaml
-        @@documents << document
-      end
-    end
-
-    def self.directory=(new_directory)
-      raise FileNotFoundError unless File.directory?(new_directory)
-      self.reset
-      @@directory = Dir.new File.expand_path(new_directory)
-      @@directory.each do |file|
-        next if ['.', '..'].include? file
-        self.from_file [@@directory.path, file].join('/')
-      end
-    end
-
-    def self.where(hash)
-      Query.new(self).where(hash)
-    end
-
-    def self.sort(field)
-      Query.new(self).sort(field)
-    end
-
-    def self.offset(number)
-      Query.new(self).offset(number)
-    end
-
-    def self.limit(number)
-      Query.new(self).limit(number)
-    end
-
-    def self.select(options = {})
-      documents = @@documents.dup
-      options[:where].each do |attribute, value|
-        documents.select! do |document|
-          document.send(attribute) == value if document.respond_to? attribute
-        end
-      end
-      documents
-    end
-
-    def self.all
-      @@documents
-    end
-
-    def self.first
-      @@documents.first
-    end
-
-    def self.last
-      @@documents.last
     end
 
     def ==(other_document)
       return false unless other_document.is_a? Document
       self.file_path == other_document.file_path
+    end
+
+    module ClassMethods
+      def reset
+        @@documents = []
+      end
+
+      def from_file(file_path)
+        if !File.exist? file_path
+          raise FileNotFoundError
+        end
+        self.new.tap do |document|
+          document.file_path = File.expand_path(file_path)
+          document.read_yaml
+          @@documents << document
+        end
+      end
+
+      def directory=(new_directory)
+        raise FileNotFoundError unless File.directory?(new_directory)
+        self.reset
+        @@directory = Dir.new File.expand_path(new_directory)
+        @@directory.each do |file|
+          next if ['.', '..'].include? file
+          self.from_file [@@directory.path, file].join('/')
+        end
+      end
+
+      def where(hash)
+        Query.new(self).where(hash)
+      end
+
+      def sort(field)
+        Query.new(self).sort(field)
+      end
+
+      def offset(number)
+        Query.new(self).offset(number)
+      end
+
+      def limit(number)
+        Query.new(self).limit(number)
+      end
+
+      def select(options = {})
+        documents = @@documents.dup
+        options[:where].each do |attribute, value|
+          documents.select! do |document|
+            document.send(attribute) == value if document.respond_to? attribute
+          end
+        end
+        documents
+      end
+
+      def all
+        @@documents
+      end
+
+      def first
+        @@documents.first
+      end
+
+      def last
+        @@documents.last
+      end
     end
   end
 end

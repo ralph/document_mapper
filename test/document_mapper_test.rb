@@ -1,15 +1,15 @@
 require './test/test_base'
 include DocumentMapper
 
-describe Document do
+describe MyDocument do
   before do
-    Document.reset
+    MyDocument.reset
   end
 
   describe 'loading a document from file' do
     before do
       @file_path = sample_file_path_1
-      @document = Document.from_file(@file_path)
+      @document = MyDocument.from_file(@file_path)
     end
 
     it 'should load the document from a yaml file' do
@@ -59,54 +59,54 @@ describe Document do
 
     describe 'loading a documents directory' do
       it 'should load all the documents in that directory' do
-        Document.directory = 'test/documents'
-        assert_equal [1,2,3,4], Document.all.map(&:id)
+        MyDocument.directory = 'test/documents'
+        assert_equal [1,2,3,4], MyDocument.all.map(&:id)
       end
     end
   end
 
-  describe 'getting all/the first/the last Document(s)' do
+  describe 'getting all/the first/the last MyDocument(s)' do
     before do
       @all_documents = [sample_document_1, sample_document_2]
     end
 
     it 'should return all documents' do
-      assert_equal @all_documents, Document.all
+      assert_equal @all_documents, MyDocument.all
     end
 
     it 'should return the first document' do
-      assert_equal @all_documents.first, Document.first
+      assert_equal @all_documents.first, MyDocument.first
     end
 
     it 'should return the last document' do
-      assert_equal @all_documents.last, Document.last
+      assert_equal @all_documents.last, MyDocument.last
     end
   end
 
   describe 'using offset and limit' do
     before do
-      Document.directory = 'test/documents'
+      MyDocument.directory = 'test/documents'
     end
 
     it 'should limit the documents to the number specified' do
-      assert_equal [1,2], Document.limit(2).all.map(&:id)
+      assert_equal [1,2], MyDocument.limit(2).all.map(&:id)
     end
 
     it 'should offset the documents by the number specified' do
-      assert_equal [3,4], Document.offset(2).all.map(&:id)
+      assert_equal [3,4], MyDocument.offset(2).all.map(&:id)
     end
 
     it 'should support offset and limit at the same time' do
-      assert_equal [2,3], Document.offset(1).limit(2).all.map(&:id)
+      assert_equal [2,3], MyDocument.offset(1).limit(2).all.map(&:id)
     end
   end
 
-  describe 'resetting the Document class' do
+  describe 'resetting the MyDocument class' do
     it 'should clear all documents' do
       one_document = sample_document_1
-      assert_equal [one_document], Document.all
-      Document.reset
-      assert_equal [], Document.all
+      assert_equal [one_document], MyDocument.all
+      MyDocument.reset
+      assert_equal [], MyDocument.all
     end
   end
 
@@ -117,27 +117,27 @@ describe Document do
     end
 
     it 'should return the right documents' do
-      found_document = Document.where(:title => @document_1.title).first
+      found_document = MyDocument.where(:title => @document_1.title).first
       assert_equal @document_1, found_document
-      found_document = Document.where(:title => @document_2.title).first
+      found_document = MyDocument.where(:title => @document_2.title).first
       assert_equal @document_2, found_document
     end
 
     it 'should be chainable' do
-      document_proxy = Document.where(:title => @document_1.title)
+      document_proxy = MyDocument.where(:title => @document_1.title)
       document_proxy.where(:id => @document_1.id)
       assert_equal @document_1, document_proxy.first
     end
 
     it 'should work with dates' do
-      found_documents = Document.where(:year => 2010).all
+      found_documents = MyDocument.where(:year => 2010).all
       expected_documents = [sample_document_1, sample_document_2]
       assert_equal expected_documents.map(&:id), found_documents.map(&:id)
     end
 
     it 'should not be confused by attributes not present in all documents' do
-      Document.directory = 'test/documents'
-      result = Document.where(:seldom_attribute => 'is seldom').all
+      MyDocument.directory = 'test/documents'
+      result = MyDocument.where(:seldom_attribute => 'is seldom').all
       assert_equal [4], result.map(&:id)
     end
   end
@@ -151,20 +151,20 @@ describe Document do
   end
 
   def sample_document_1
-    Document.from_file(sample_file_path_1)
+    MyDocument.from_file(sample_file_path_1)
   end
 
   def sample_document_2
-    Document.from_file(sample_file_path_2)
+    MyDocument.from_file(sample_file_path_2)
   end
 
   def sample_document_with_date_in_yaml
     file_path = 'test/documents/document_with_date_in_yaml.textile'
-    Document.from_file(file_path)
+    MyDocument.from_file(file_path)
   end
 
   def sample_document_without_date
     file_path = 'test/documents/document_without_date.textile'
-    Document.from_file(file_path)
+    MyDocument.from_file(file_path)
   end
 end
