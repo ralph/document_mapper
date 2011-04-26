@@ -9,11 +9,11 @@ PATH
 GEM
   remote: http://rubygems.org/
   specs:
-    activemodel (3.0.5)
-      activesupport (= 3.0.5)
+    activemodel (3.0.7)
+      activesupport (= 3.0.7)
       builder (~> 2.1.2)
-      i18n (~> 0.4)
-    activesupport (3.0.5)
+      i18n (~> 0.5.0)
+    activesupport (3.0.7)
     builder (2.1.2)
     i18n (0.5.0)
 
