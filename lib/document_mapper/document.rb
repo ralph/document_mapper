@@ -23,6 +23,11 @@ module DocumentMapper
         @@documents = []
       end
 
+      def reload
+        self.reset
+        self.directory = @@directory
+      end
+
       def from_file(file_path)
         if !File.exist? file_path
           raise FileNotFoundError

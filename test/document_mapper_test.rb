@@ -142,6 +142,28 @@ describe MyDocument do
     end
   end
 
+  describe 'reloading the Document class' do
+    it 'should discover new documents' do
+      @file_path = 'test/documents/2011-04-26-new-stuff.textile'
+      File.open(@file_path, 'w') do |f|
+        f.write <<-EOS
+---
+id: 5
+title: Some brand new document
+---
+
+Very new stuff.
+EOS
+      end
+      MyDocument.reload
+      assert_equal [1,2,3,4,5].sort, MyDocument.all.map(&:id).sort
+    end
+
+    def teardown
+      File.delete @file_path
+    end
+  end
+
   def sample_file_path_1
     'test/documents/2010-08-08-test-document-file.textile'
   end
