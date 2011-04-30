@@ -47,6 +47,7 @@ h3. Date recognition
 You can either set the date of a document in the YAML front matter, or you can use the file name, if you want to. A file named @2010-08-07-test-document-file.textile@ will return a date like this:
 
 <pre><code>doc.date                     # => #<Date: 2010-08-08 (4910833/2,0,2299161)>
+doc.date.to_s                # => "2010-08-08"
 doc.year                     # => 2010
 doc.month                    # => 08
 doc.day                      # => 07
@@ -85,6 +86,16 @@ MyDocument.where(:year => 2010).all
 </code></pre>
 
 Not all of the documents in the directory need to have all of the attributes. You can add single attributes to single documents, and the queries will only return those documents where the attributes match.
+
+The document queries do support more operators than just equality. The following operators are available:
+
+<pre><code>MyDocument.where(:year.gt => 2010)
+MyDocument.where(:year.gte => 2010)
+MyDocument.where(:year.in => [2010,2011])
+MyDocument.where(:year.lt => 2010)
+MyDocument.where(:year.lte => 2010)
+</code></pre>
+
 
 h3. Chaining
 
