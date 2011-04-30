@@ -193,6 +193,14 @@ describe MyDocument do
         assert_equal [3], found_documents.map(&:id)
       end
     end
+
+    describe 'using multiple constrains in one where' do
+      it 'should return the right documents' do
+        selector = Selector.new :attribute => 'id', :operator => 'lte'
+        found_documents = MyDocument.where(selector => 2, :status => :published).all
+        assert_equal [1,2], found_documents.map(&:id)
+      end
+    end
   end
 
   describe 'reloading the Document class' do

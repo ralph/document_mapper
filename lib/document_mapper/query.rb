@@ -5,11 +5,13 @@ module DocumentMapper
       @where = {}
     end
 
-    def where(selector_hash)
-      unless selector_hash.keys.first.is_a? Selector
-        attribute = selector_hash.keys.first
+    def where(constraints_hash)
+      differentiator = ->(key, value){ key.is_a? Selector }
+      selector_hash = constraints_hash.select &differentiator
+      symbol_hash = constraints_hash.reject &differentiator
+      symbol_hash.each do |attribute, value|
         selector = Selector.new(:attribute => attribute, :operator => 'equal')
-        selector_hash = { selector => selector_hash.values.first }
+        selector_hash.update({ selector => value })
       end
       @where.merge! selector_hash
       self
