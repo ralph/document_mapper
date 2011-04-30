@@ -53,11 +53,10 @@ module DocumentMapper
         documents = @@documents.dup
         options[:where].each do |selector, selector_value|
           documents.select! do |document|
-            if document.respond_to? selector.attribute
-              document_value = document.send(selector.attribute)
-              operator = REVERSE_OPERATOR_MAPPING[selector.operator]
-              selector_value.send operator, document_value
-            end
+            next unless document.respond_to? selector.attribute
+            document_value = document.send(selector.attribute)
+            operator = REVERSE_OPERATOR_MAPPING[selector.operator]
+            selector_value.send operator, document_value
           end
         end
         documents
