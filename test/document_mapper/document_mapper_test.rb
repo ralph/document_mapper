@@ -1,4 +1,4 @@
-require './test/test_base'
+require File.join(File.expand_path(__FILE__), '..', '..', 'test_base')
 include DocumentMapper
 
 describe MyDocument do
