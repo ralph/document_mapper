@@ -51,12 +51,12 @@ module DocumentMapper
 
       def select(options = {})
         documents = @@documents.dup
-        options[:where].each do |selector, value|
-          operator = OPERATOR_MAPPING[selector.operator]
+        options[:where].each do |selector, selector_value|
           documents.select! do |document|
-            document_value = document.send(selector.attribute)
             if document.respond_to? selector.attribute
-              document_value.send operator, value
+              document_value = document.send(selector.attribute)
+              operator = REVERSE_OPERATOR_MAPPING[selector.operator]
+              selector_value.send operator, document_value
             end
           end
         end

@@ -1,12 +1,12 @@
 module DocumentMapper
-  OPERATOR_MAPPING = {
+  REVERSE_OPERATOR_MAPPING = {
     'equal' => :==,
-    'gt'    => :>,
-    'gte'   => :>=,
+    'gt'    => :<,
+    'gte'   => :<=,
     'in'    => :include?,
-    'lt'    => :<,
-    'lte'   => :<=
+    'lt'    => :>,
+    'lte'   => :>=
   }
 
-  VALID_OPERATORS = OPERATOR_MAPPING.keys
+  VALID_OPERATORS = REVERSE_OPERATOR_MAPPING.keys
 end

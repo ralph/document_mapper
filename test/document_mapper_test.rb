@@ -114,6 +114,7 @@ describe MyDocument do
     before do
       @document_1 = sample_document_1
       @document_2 = sample_document_2
+      MyDocument.directory = 'test/documents'
     end
 
     describe 'with an equal operator' do
@@ -140,6 +141,46 @@ describe MyDocument do
         MyDocument.directory = 'test/documents'
         result = MyDocument.where(:seldom_attribute => 'is seldom').all
         assert_equal [4], result.map(&:id)
+      end
+    end
+
+    describe 'with an gt operator' do
+      it 'should return the right documents' do
+        selector = Selector.new :attribute => 'id', :operator => 'gt'
+        found_documents = MyDocument.where(selector => 2).all
+        assert_equal [3,4], found_documents.map(&:id)
+      end
+    end
+
+    describe 'with an gte operator' do
+      it 'should return the right documents' do
+        selector = Selector.new :attribute => 'id', :operator => 'gte'
+        found_documents = MyDocument.where(selector => 2).all
+        assert_equal [2,3,4], found_documents.map(&:id)
+      end
+    end
+
+    describe 'with an in operator' do
+      it 'should return the right documents' do
+        selector = Selector.new :attribute => 'id', :operator => 'in'
+        found_documents = MyDocument.where(selector => [2,3]).all
+        assert_equal [2,3], found_documents.map(&:id)
+      end
+    end
+
+    describe 'with an lt operator' do
+      it 'should return the right documents' do
+        selector = Selector.new :attribute => 'id', :operator => 'lt'
+        found_documents = MyDocument.where(selector => 2).all
+        assert_equal [1], found_documents.map(&:id)
+      end
+    end
+
+    describe 'with an lte operator' do
+      it 'should return the right documents' do
+        selector = Selector.new :attribute => 'id', :operator => 'lte'
+        found_documents = MyDocument.where(selector => 2).all
+        assert_equal [1,2], found_documents.map(&:id)
       end
     end
   end
