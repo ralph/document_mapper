@@ -144,7 +144,7 @@ describe MyDocument do
       end
     end
 
-    describe 'with an gt operator' do
+    describe 'with a gt operator' do
       it 'should return the right documents' do
         selector = Selector.new :attribute => 'id', :operator => 'gt'
         found_documents = MyDocument.where(selector => 2).all
@@ -152,7 +152,7 @@ describe MyDocument do
       end
     end
 
-    describe 'with an gte operator' do
+    describe 'with a gte operator' do
       it 'should return the right documents' do
         selector = Selector.new :attribute => 'id', :operator => 'gte'
         found_documents = MyDocument.where(selector => 2).all
@@ -181,6 +181,16 @@ describe MyDocument do
         selector = Selector.new :attribute => 'id', :operator => 'lte'
         found_documents = MyDocument.where(selector => 2).all
         assert_equal [1,2], found_documents.map(&:id)
+      end
+    end
+
+    describe 'with mixed operators' do
+      it 'should return the right documents' do
+        in_selector = Selector.new :attribute => 'id', :operator => 'in'
+        gt_selector = Selector.new :attribute => 'id', :operator => 'gt'
+        documents_proxy = MyDocument.where(in_selector => [2,3])
+        found_documents = documents_proxy.where(gt_selector => 2).all
+        assert_equal [3], found_documents.map(&:id)
       end
     end
   end
