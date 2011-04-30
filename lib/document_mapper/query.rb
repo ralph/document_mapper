@@ -5,8 +5,16 @@ module DocumentMapper
       @where = {}
     end
 
-    def where(hash)
-      @where.merge! hash
+    def where(selector_hash)
+      unless selector_hash.keys.first.is_a? Selector
+        selector_hash = {
+          Selector.new(
+            :attribute => selector_hash.keys.first,
+            :operator => 'equal'
+          ) => selector_hash.values.first
+        }
+      end
+      @where.merge! selector_hash
       self
     end
 

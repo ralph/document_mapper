@@ -1,6 +1,4 @@
 module DocumentMapper
-  VALID_OPERATORS = %w(equal gt gte in lt lte)
-
   class Selector
     attr_reader :attribute, :operator
 
