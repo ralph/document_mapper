@@ -2,3 +2,4 @@
 *.gem
 .bundle
 .irbrc
+tags
