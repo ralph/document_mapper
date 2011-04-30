@@ -1,10 +1,9 @@
 PATH
   remote: .
   specs:
-    document_mapper (0.0.9)
+    document_mapper (0.1.0)
       activemodel (~> 3.0.0)
       activesupport (~> 3.0.0)
-      i18n (~> 0.5.0)
 
 GEM
   remote: http://rubygems.org/

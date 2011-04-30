@@ -2,7 +2,7 @@ $:.unshift 'lib'
 require 'document_mapper/version'
 
 Gem::Specification.new do |s|
-  s.name              = "document_mapper"
+  s.name              = 'document_mapper'
   s.version           = DocumentMapper::VERSION
   s.date              = Time.now.strftime('%Y-%m-%d')
   s.summary           = 'DocumentMapper is an object mapper for plain text documents.'
@@ -15,7 +15,6 @@ Gem::Specification.new do |s|
   s.files            += Dir.glob("test/**/*")
 
   s.specification_version = 3
-  s.add_runtime_dependency('i18n', '~> 0.5.0')
   s.add_runtime_dependency('activesupport', '~> 3.0.0')
   s.add_runtime_dependency('activemodel', '~> 3.0.0')
 
