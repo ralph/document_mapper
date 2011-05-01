@@ -19,8 +19,15 @@ module DocumentMapper
     end
 
     def file_name(options = {})
-      extension = options[:extension] == false ? File.extname(file_path) : ''
-      File.basename(self.file_path, extension)
+      File.basename self.file_path
+    end
+
+    def file_name_without_extension
+      File.basename self.file_path, File.extname(self.file_path)
+    end
+
+    def extension
+      File.extname(self.file_path).sub(/^\./, '')
     end
 
     module ClassMethods

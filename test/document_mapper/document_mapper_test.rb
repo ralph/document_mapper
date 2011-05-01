@@ -35,9 +35,13 @@ describe MyDocument do
       assert_equal expected_name, @document.file_name
     end
 
-    it 'should return the file name without suffix' do
+    it 'should return the file name without extension' do
       expected_name = '2010-08-08-test-document-file'
-      assert_equal expected_name, @document.file_name(:extension => false)
+      assert_equal expected_name, @document.file_name_without_extension
+    end
+
+    it 'should return the extension' do
+      assert_equal 'textile', @document.extension
     end
 
     describe 'specifying the date of the document' do
@@ -142,6 +146,19 @@ describe MyDocument do
         document_proxy = MyDocument.where(:title => @document_1.title)
         document_proxy.where(:id => @document_1.id)
         assert_equal @document_1, document_proxy.first
+      end
+
+      it 'should work with file names without extensions' do
+        file_name = '2010-08-08-test-document-file'
+        selector_hash = { :file_name_without_extension => file_name }
+        found_document = MyDocument.where(selector_hash).first
+        assert_equal sample_document_1, found_document
+      end
+
+      it 'should work with file names' do
+        file_name = '2010-08-08-test-document-file.textile'
+        found_document = MyDocument.where(:file_name => file_name).first
+        assert_equal sample_document_1, found_document
       end
 
       it 'should work with dates' do
