@@ -24,7 +24,20 @@ describe MyDocument do
       assert_equal 'Some fancy title', @document.title
       assert_equal ['ruby'], @document.tags
       assert_equal :published, @document.status
+    end
+
+    it 'should return the file path' do
       assert_equal File.expand_path(@file_path), @document.file_path
+    end
+
+    it 'should return the file name' do
+      expected_name = '2010-08-08-test-document-file.textile'
+      assert_equal expected_name, @document.file_name
+    end
+
+    it 'should return the file name without suffix' do
+      expected_name = '2010-08-08-test-document-file'
+      assert_equal expected_name, @document.file_name(:extension => false)
     end
 
     describe 'specifying the date of the document' do

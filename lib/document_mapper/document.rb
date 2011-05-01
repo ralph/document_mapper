@@ -18,6 +18,11 @@ module DocumentMapper
       self.file_path == other_document.file_path
     end
 
+    def file_name(options = {})
+      extension = options[:extension] == false ? File.extname(file_path) : ''
+      File.basename(self.file_path, extension)
+    end
+
     module ClassMethods
       def reset
         @@documents = []
