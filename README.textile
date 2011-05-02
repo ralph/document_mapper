@@ -89,11 +89,11 @@ Not all of the documents in the directory need to have all of the attributes. Yo
 
 The document queries do support more operators than just equality. The following operators are available:
 
-<pre><code>MyDocument.where(:year.gt => 2010)
-MyDocument.where(:year.gte => 2010)
-MyDocument.where(:year.in => [2010,2011])
-MyDocument.where(:year.lt => 2010)
-MyDocument.where(:year.lte => 2010)
+<pre><code>MyDocument.where(:year.gt => 2010)        # year > 2010
+MyDocument.where(:year.gte => 2010)       # year >= 2010
+MyDocument.where(:year.in => [2010,2011]) # year one of [2010,2011]
+MyDocument.where(:year.lt => 2010)        # year < 2010
+MyDocument.where(:year.lte => 2010)       # year <= 2010
 </code></pre>
 
 
