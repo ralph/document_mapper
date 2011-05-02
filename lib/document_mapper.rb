@@ -11,4 +11,5 @@ require 'document_mapper/query'
 require 'document_mapper/selector'
 require 'document_mapper/version'
 
+require 'document_mapper/core_ext/object'
 require 'document_mapper/core_ext/symbol'
