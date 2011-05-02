@@ -13,10 +13,10 @@ describe MyDocument do
     end
 
     it 'should load the document from a yaml file' do
-      assert_equal 1, @document.attributes['id']
-      assert_equal 'Some fancy title', @document.attributes['title']
-      assert_equal ['ruby'], @document.attributes['tags']
-      assert_equal :published, @document.attributes['status']
+      assert_equal 1, @document.attributes[:id]
+      assert_equal 'Some fancy title', @document.attributes[:title]
+      assert_equal ['ruby'], @document.attributes[:tags]
+      assert_equal :published, @document.attributes[:status]
     end
 
     it 'should specify attributes from the YAML header' do
@@ -176,7 +176,7 @@ describe MyDocument do
 
     describe 'with a gt operator' do
       it 'should return the right documents' do
-        selector = Selector.new :attribute => 'id', :operator => 'gt'
+        selector = Selector.new :attribute => :id, :operator => 'gt'
         found_documents = MyDocument.where(selector => 2).all
         assert_equal [3,4], found_documents.map(&:id)
       end
@@ -184,7 +184,7 @@ describe MyDocument do
 
     describe 'with a gte operator' do
       it 'should return the right documents' do
-        selector = Selector.new :attribute => 'id', :operator => 'gte'
+        selector = Selector.new :attribute => :id, :operator => 'gte'
         found_documents = MyDocument.where(selector => 2).all
         assert_equal [2,3,4], found_documents.map(&:id)
       end
@@ -192,7 +192,7 @@ describe MyDocument do
 
     describe 'with an in operator' do
       it 'should return the right documents' do
-        selector = Selector.new :attribute => 'id', :operator => 'in'
+        selector = Selector.new :attribute => :id, :operator => 'in'
         found_documents = MyDocument.where(selector => [2,3]).all
         assert_equal [2,3], found_documents.map(&:id)
       end
@@ -200,7 +200,7 @@ describe MyDocument do
 
     describe 'with an lt operator' do
       it 'should return the right documents' do
-        selector = Selector.new :attribute => 'id', :operator => 'lt'
+        selector = Selector.new :attribute => :id, :operator => 'lt'
         found_documents = MyDocument.where(selector => 2).all
         assert_equal [1], found_documents.map(&:id)
       end
@@ -208,7 +208,7 @@ describe MyDocument do
 
     describe 'with an lte operator' do
       it 'should return the right documents' do
-        selector = Selector.new :attribute => 'id', :operator => 'lte'
+        selector = Selector.new :attribute => :id, :operator => 'lte'
         found_documents = MyDocument.where(selector => 2).all
         assert_equal [1,2], found_documents.map(&:id)
       end
@@ -216,7 +216,7 @@ describe MyDocument do
 
     describe 'with an include operator' do
       it 'include should return the right documents' do
-        selector = Selector.new :attribute => 'tags', :operator => 'include'
+        selector = Selector.new :attribute => :tags, :operator => 'include'
         found_documents = MyDocument.where(selector => 'ruby').all
         assert_equal [1,2], found_documents.map(&:id)
       end
@@ -224,8 +224,8 @@ describe MyDocument do
 
     describe 'with mixed operators' do
       it 'should return the right documents' do
-        in_selector = Selector.new :attribute => 'id', :operator => 'in'
-        gt_selector = Selector.new :attribute => 'id', :operator => 'gt'
+        in_selector = Selector.new :attribute => :id, :operator => 'in'
+        gt_selector = Selector.new :attribute => :id, :operator => 'gt'
         documents_proxy = MyDocument.where(in_selector => [2,3])
         found_documents = documents_proxy.where(gt_selector => 2).all
         assert_equal [3], found_documents.map(&:id)
@@ -234,7 +234,7 @@ describe MyDocument do
 
     describe 'using multiple constrains in one where' do
       it 'should return the right documents' do
-        selector = Selector.new :attribute => 'id', :operator => 'lte'
+        selector = Selector.new :attribute => :id, :operator => 'lte'
         found_documents = MyDocument.where(selector => 2, :status => :published).all
         assert_equal [1,2], found_documents.map(&:id)
       end

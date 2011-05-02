@@ -34,7 +34,7 @@ module DocumentMapper
         end
         self.new.tap do |document|
           document.attributes = {
-            'file_path' => File.expand_path(file_path)
+            :file_path => File.expand_path(file_path)
           }
           document.read_yaml
           @@documents << document
@@ -55,7 +55,7 @@ module DocumentMapper
         documents = @@documents.dup
         options[:where].each do |selector, selector_value|
           documents.select! do |document|
-            next unless document.attributes.has_key? selector.attribute.to_s
+            next unless document.attributes.has_key? selector.attribute
             document_value = document.send(selector.attribute)
             operator = OPERATOR_MAPPING[selector.operator]
             document_value.send operator, selector_value
