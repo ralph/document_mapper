@@ -7,7 +7,7 @@ module DocumentMapper
     include AttributeMethods::Read
     include YamlParsing
 
-    attr_accessor :attributes, :content, :directory, :file_path
+    attr_accessor :attributes, :content, :directory
 
     included do
       @@documents = []
@@ -16,18 +16,6 @@ module DocumentMapper
     def ==(other_document)
       return false unless other_document.is_a? Document
       self.file_path == other_document.file_path
-    end
-
-    def file_name(options = {})
-      File.basename self.file_path
-    end
-
-    def file_name_without_extension
-      File.basename self.file_path, File.extname(self.file_path)
-    end
-
-    def extension
-      File.extname(self.file_path).sub(/^\./, '')
     end
 
     module ClassMethods
@@ -45,7 +33,9 @@ module DocumentMapper
           raise FileNotFoundError
         end
         self.new.tap do |document|
-          document.file_path = File.expand_path(file_path)
+          document.attributes = {
+            'file_path' => File.expand_path(file_path)
+          }
           document.read_yaml
           @@documents << document
         end
@@ -65,10 +55,10 @@ module DocumentMapper
         documents = @@documents.dup
         options[:where].each do |selector, selector_value|
           documents.select! do |document|
-            next unless document.respond_to? selector.attribute
+            next unless document.attributes.has_key? selector.attribute.to_s
             document_value = document.send(selector.attribute)
-            operator = REVERSE_OPERATOR_MAPPING[selector.operator]
-            selector_value.send operator, document_value
+            operator = OPERATOR_MAPPING[selector.operator]
+            document_value.send operator, selector_value
           end
         end
         documents

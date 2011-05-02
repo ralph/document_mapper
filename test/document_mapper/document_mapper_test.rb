@@ -214,6 +214,14 @@ describe MyDocument do
       end
     end
 
+    describe 'with an include operator' do
+      it 'include should return the right documents' do
+        selector = Selector.new :attribute => 'tags', :operator => 'include'
+        found_documents = MyDocument.where(selector => 'ruby').all
+        assert_equal [1,2], found_documents.map(&:id)
+      end
+    end
+
     describe 'with mixed operators' do
       it 'should return the right documents' do
         in_selector = Selector.new :attribute => 'id', :operator => 'in'
