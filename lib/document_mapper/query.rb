@@ -17,8 +17,8 @@ module DocumentMapper
       self
     end
 
-    def sort(field)
-      @sort = field
+    def order_by(field)
+      @order_by = field.is_a?(Symbol) ? {field => :asc} : field
       self
     end
 
@@ -41,7 +41,7 @@ module DocumentMapper
     end
 
     def all
-      result = @model.select(:where => @where, :sort => @sort)
+      result = @model.select(:where => @where, :order_by => @order_by)
       if @offset.present?
         result = result.last(result.size - @offset)
       end

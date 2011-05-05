@@ -241,6 +241,32 @@ describe MyDocument do
     end
   end
 
+  describe 'sorting the documents' do
+    before do
+      MyDocument.directory = 'test/documents'
+    end
+
+    it 'should support ordering by attribute ascending' do
+      found_documents = MyDocument.order_by(:title => :asc).all
+      assert_equal [2,3,1,4], found_documents.map(&:id)
+    end
+
+    it 'should support ordering by attribute descending' do
+      found_documents = MyDocument.order_by(:title => :desc).all
+      assert_equal [4,1,3,2], found_documents.map(&:id)
+    end
+
+    it 'should order by attribute ascending by default' do
+      found_documents = MyDocument.order_by(:title).all
+      assert_equal [2,3,1,4], found_documents.map(&:id)
+    end
+
+    it 'should exclude documents that do not own the attribute' do
+      found_documents = MyDocument.order_by(:status).all
+      assert_equal [1,2], found_documents.map(&:id)
+    end
+  end
+
   describe 'reloading the Document class' do
     it 'should discover new documents' do
       @file_path = 'test/documents/2011-04-26-new-stuff.textile'

@@ -61,6 +61,17 @@ module DocumentMapper
             document_value.send operator, selector_value
           end
         end
+
+        if options[:order_by].present?
+          order_attribute = options[:order_by].keys.first
+          asc_or_desc = options[:order_by].values.first
+          documents.select! do |document|
+            document.attributes.include? order_attribute
+          end
+          documents.sort_by! { |document| document.send order_attribute }
+          documents.reverse! if asc_or_desc == :desc
+        end
+
         documents
       end
 
@@ -68,8 +79,8 @@ module DocumentMapper
         Query.new(self).where(hash)
       end
 
-      def sort(field)
-        Query.new(self).sort(field)
+      def order_by(field)
+        Query.new(self).order_by(field)
       end
 
       def offset(number)

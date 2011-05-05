@@ -97,6 +97,13 @@ MyDocument.where(:year.lt => 2010)        # year < 2010
 MyDocument.where(:year.lte => 2010)       # year <= 2010
 </code></pre>
 
+While retrieving documents, you can also define the way the documents should be ordered. By default, the documents will be returned in the order they were loaded from the file system, which usually means by file name ascending. If you define an ordering, the documents that don't own the ordering attribute will be excluded.
+
+<pre><code>MyDocument.order_by(:title => :asc).all  # Order by title attribute, ascending
+MyDocument.order_by(:title).all          # Same as order_by(:title => :asc)
+MyDocument.order_by(:title => :desc).all # Order by title attribute, descending
+</code></pre>
+
 
 h3. Chaining
 
