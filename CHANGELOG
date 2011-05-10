@@ -1,0 +1,10 @@
+Version 0.1.2:
+* add support for ordering: MyDocument.order_by(:title => :asc)
+
+Version 0.1.1:
+* add support for where(:tags.include => 'ruby')
+* bugfixes
+
+Version 0.1.0:
+
+* first release
