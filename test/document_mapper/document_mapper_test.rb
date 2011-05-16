@@ -77,7 +77,7 @@ describe MyDocument do
     describe 'loading a documents directory' do
       it 'should load all the documents in that directory' do
         MyDocument.directory = 'test/documents'
-        assert_equal [1,2,3,4], MyDocument.all.map(&:id)
+        assert_equal_set [1,2,3,4], MyDocument.all.map(&:id)
       end
     end
   end
@@ -106,15 +106,15 @@ describe MyDocument do
     end
 
     it 'should limit the documents to the number specified' do
-      assert_equal [1,2], MyDocument.limit(2).all.map(&:id)
+      assert_equal_set [1,2], MyDocument.limit(2).all.map(&:id)
     end
 
     it 'should offset the documents by the number specified' do
-      assert_equal [3,4], MyDocument.offset(2).all.map(&:id)
+      assert_equal_set [3,4], MyDocument.offset(2).all.map(&:id)
     end
 
     it 'should support offset and limit at the same time' do
-      assert_equal [2,3], MyDocument.offset(1).limit(2).all.map(&:id)
+      assert_equal_set [2,3], MyDocument.offset(1).limit(2).all.map(&:id)
     end
   end
 
@@ -164,13 +164,13 @@ describe MyDocument do
       it 'should work with dates' do
         found_documents = MyDocument.where(:year => 2010).all
         expected_documents = [sample_document_1, sample_document_2]
-        assert_equal expected_documents.map(&:id), found_documents.map(&:id)
+        assert_equal_set expected_documents.map(&:id), found_documents.map(&:id)
       end
 
       it 'should not be confused by attributes not present in all documents' do
         MyDocument.directory = 'test/documents'
         result = MyDocument.where(:seldom_attribute => 'is seldom').all
-        assert_equal [4], result.map(&:id)
+        assert_equal_set [4], result.map(&:id)
       end
     end
 
@@ -178,7 +178,7 @@ describe MyDocument do
       it 'should return the right documents' do
         selector = Selector.new :attribute => :id, :operator => 'gt'
         found_documents = MyDocument.where(selector => 2).all
-        assert_equal [3,4], found_documents.map(&:id)
+        assert_equal_set [3,4], found_documents.map(&:id)
       end
     end
 
@@ -186,7 +186,7 @@ describe MyDocument do
       it 'should return the right documents' do
         selector = Selector.new :attribute => :id, :operator => 'gte'
         found_documents = MyDocument.where(selector => 2).all
-        assert_equal [2,3,4], found_documents.map(&:id)
+        assert_equal_set [2,3,4], found_documents.map(&:id)
       end
     end
 
@@ -194,7 +194,7 @@ describe MyDocument do
       it 'should return the right documents' do
         selector = Selector.new :attribute => :id, :operator => 'in'
         found_documents = MyDocument.where(selector => [2,3]).all
-        assert_equal [2,3], found_documents.map(&:id)
+        assert_equal_set [2,3], found_documents.map(&:id)
       end
     end
 
@@ -202,7 +202,7 @@ describe MyDocument do
       it 'should return the right documents' do
         selector = Selector.new :attribute => :id, :operator => 'lt'
         found_documents = MyDocument.where(selector => 2).all
-        assert_equal [1], found_documents.map(&:id)
+        assert_equal_set [1], found_documents.map(&:id)
       end
     end
 
@@ -210,7 +210,7 @@ describe MyDocument do
       it 'should return the right documents' do
         selector = Selector.new :attribute => :id, :operator => 'lte'
         found_documents = MyDocument.where(selector => 2).all
-        assert_equal [1,2], found_documents.map(&:id)
+        assert_equal_set [1,2], found_documents.map(&:id)
       end
     end
 
@@ -218,7 +218,7 @@ describe MyDocument do
       it 'include should return the right documents' do
         selector = Selector.new :attribute => :tags, :operator => 'include'
         found_documents = MyDocument.where(selector => 'ruby').all
-        assert_equal [1,2], found_documents.map(&:id)
+        assert_equal_set [1,2], found_documents.map(&:id)
       end
     end
 
@@ -228,7 +228,7 @@ describe MyDocument do
         gt_selector = Selector.new :attribute => :id, :operator => 'gt'
         documents_proxy = MyDocument.where(in_selector => [2,3])
         found_documents = documents_proxy.where(gt_selector => 2).all
-        assert_equal [3], found_documents.map(&:id)
+        assert_equal_set [3], found_documents.map(&:id)
       end
     end
 
@@ -236,7 +236,7 @@ describe MyDocument do
       it 'should return the right documents' do
         selector = Selector.new :attribute => :id, :operator => 'lte'
         found_documents = MyDocument.where(selector => 2, :status => :published).all
-        assert_equal [1,2], found_documents.map(&:id)
+        assert_equal_set [1,2], found_documents.map(&:id)
       end
     end
   end
@@ -263,7 +263,7 @@ describe MyDocument do
 
     it 'should exclude documents that do not own the attribute' do
       found_documents = MyDocument.order_by(:status).all
-      assert_equal [1,2], found_documents.map(&:id)
+      assert_equal [1,2].to_set, found_documents.map(&:id).to_set
     end
   end
 
