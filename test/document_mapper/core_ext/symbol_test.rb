@@ -1,4 +1,4 @@
-require File.join(File.expand_path(__FILE__), '..', '..', '..', 'test_base')
+require 'test_base'
 include DocumentMapper
 
 describe Symbol do
