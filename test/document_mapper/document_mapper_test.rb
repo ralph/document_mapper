@@ -106,15 +106,15 @@ describe MyDocument do
     end
 
     it 'should limit the documents to the number specified' do
-      assert_equal_set [1,2], MyDocument.limit(2).all.map(&:id)
+      assert_equal_set [1,2], MyDocument.order_by(:id).limit(2).all.map(&:id)
     end
 
     it 'should offset the documents by the number specified' do
-      assert_equal_set [3,4], MyDocument.offset(2).all.map(&:id)
+      assert_equal_set [3,4], MyDocument.order_by(:id).offset(2).all.map(&:id)
     end
 
     it 'should support offset and limit at the same time' do
-      assert_equal_set [2,3], MyDocument.offset(1).limit(2).all.map(&:id)
+      assert_equal_set [2,3], MyDocument.order_by(:id).offset(1).limit(2).all.map(&:id)
     end
   end
 
