@@ -289,6 +289,33 @@ EOS
     end
   end
 
+  describe 'getting a list of all the attributes' do
+    before do
+      MyDocument.directory = 'test/documents'
+    end
+
+    it 'should return an ordered list of all the attributes' do
+      expected_attributes = %w(
+        date
+        day
+        extension
+        file_name
+        file_name_without_extension
+        file_path
+        friends
+        id
+        month
+        seldom_attribute
+        special_attribute
+        status
+        tags
+        title
+        year
+      ).map(&:to_sym)
+      assert_equal expected_attributes, MyDocument.attributes
+    end
+  end
+
   def sample_file_path_1
     'test/documents/2010-08-08-test-document-file.textile'
   end

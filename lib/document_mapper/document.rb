@@ -102,6 +102,10 @@ module DocumentMapper
       def last
         @@documents.last
       end
+
+      def attributes
+        @@documents.map(&:attributes).map(&:keys).flatten.uniq.sort
+      end
     end
   end
 end
