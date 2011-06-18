@@ -1,5 +1,6 @@
-.rvmrc
 *.gem
 .bundle
 .irbrc
+.rvmrc
+Gemfile.lock
 tags
