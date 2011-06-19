@@ -46,7 +46,7 @@ module DocumentMapper
         self.reset
         @@directory = Dir.new File.expand_path(new_directory)
         @@directory.each do |file|
-          next if ['.', '..'].include? file
+          next if file[0] == '.'
           self.from_file [@@directory.path, file].join('/')
         end
       end

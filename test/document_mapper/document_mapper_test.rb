@@ -79,6 +79,11 @@ describe MyDocument do
         MyDocument.directory = 'test/documents'
         assert_equal_set [1,2,3,4], MyDocument.all.map(&:id)
       end
+
+      it 'should ignore all dotfile' do
+        MyDocument.directory = 'test/documents'
+        refute MyDocument.all.map(&:id).include?(5)
+      end
     end
   end
 

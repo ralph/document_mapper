@@ -1,0 +1,8 @@
+---
+id: 5
+title: I want to be ignored
+tags: [ignored]
+status: :unpublished
+---
+
+I like being ignored.
