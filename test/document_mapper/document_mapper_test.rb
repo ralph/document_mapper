@@ -321,6 +321,17 @@ EOS
     end
   end
 
+  describe 'rendering the document as html' do
+    before do
+      @file_path = sample_file_path_1
+      @document = MyDocument.from_file(@file_path)
+    end
+
+    it 'should render the content as html' do
+      assert_equal '<p>I like being the demo text.</p>', @document.to_html
+    end
+  end
+
   def sample_file_path_1
     'test/documents/2010-08-08-test-document-file.textile'
   end

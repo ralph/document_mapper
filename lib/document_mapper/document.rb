@@ -5,6 +5,7 @@ module DocumentMapper
     extend ActiveSupport::Concern
     include ActiveModel::AttributeMethods
     include AttributeMethods::Read
+    include ToHtml
     include YamlParsing
 
     attr_accessor :attributes, :content, :directory
