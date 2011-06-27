@@ -8,7 +8,7 @@ module DocumentMapper
     include ToHtml
     include YamlParsing
 
-    attr_accessor :attributes, :content, :directory
+    attr_accessor :attributes, :content
 
     included do
       @@documents = []
