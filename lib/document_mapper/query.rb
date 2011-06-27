@@ -6,7 +6,7 @@ module DocumentMapper
     end
 
     def where(constraints_hash)
-      differentiator = ->(key, value){ key.is_a? Selector }
+      differentiator = Proc.new(key, value){ key.is_a? Selector }
       selector_hash = constraints_hash.select &differentiator
       symbol_hash = constraints_hash.reject &differentiator
       symbol_hash.each do |attribute, value|
