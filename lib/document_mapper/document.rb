@@ -55,7 +55,7 @@ module DocumentMapper
       def select(options = {})
         documents = @@documents.dup
         options[:where].each do |selector, selector_value|
-          documents.select! do |document|
+          documents = documents.select do |document|
             next unless document.attributes.has_key? selector.attribute
             document_value = document.send(selector.attribute)
             operator = OPERATOR_MAPPING[selector.operator]
@@ -66,10 +66,12 @@ module DocumentMapper
         if options[:order_by].present?
           order_attribute = options[:order_by].keys.first
           asc_or_desc = options[:order_by].values.first
-          documents.select! do |document|
+          documents = documents.select do |document|
             document.attributes.include? order_attribute
           end
-          documents.sort_by! { |document| document.send order_attribute }
+          documents = documents.sort_by do |document|
+            document.send order_attribute
+          end
           documents.reverse! if asc_or_desc == :desc
         end
 
@@ -105,7 +107,12 @@ module DocumentMapper
       end
 
       def attributes
-        @@documents.map(&:attributes).map(&:keys).flatten.uniq.sort
+        attributes = @@documents.map(&:attributes).map(&:keys).flatten.uniq
+        if RUBY_VERSION <= '1.8.7'
+          attributes.map(&:to_s).sort.map(&:to_sym)
+        else
+          attributes.sort
+        end
       end
     end
   end
