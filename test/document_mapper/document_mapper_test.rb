@@ -121,6 +121,10 @@ describe MyDocument do
     it 'should support offset and limit at the same time' do
       assert_equal_set [2,3], MyDocument.order_by(:id).offset(1).limit(2).all.map(&:id)
     end
+
+    it 'should not freak out about an offset higher than the document count' do
+      assert_equal_set [], MyDocument.order_by(:id).offset(5).all
+    end
   end
 
   describe 'resetting the MyDocument class' do

@@ -43,7 +43,7 @@ module DocumentMapper
     def all
       result = @model.select(:where => @where, :order_by => @order_by)
       if @offset.present?
-        result = result.last(result.size - @offset)
+        result = result.last([result.size - @offset, 0].max)
       end
       if @limit.present?
         result = result.first(@limit)
