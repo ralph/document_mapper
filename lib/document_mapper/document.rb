@@ -26,7 +26,7 @@ module DocumentMapper
 
       def reload
         self.reset
-        self.directory = @@directory
+        self.directory = @@directory.path
       end
 
       def from_file(file_path)
@@ -107,12 +107,7 @@ module DocumentMapper
       end
 
       def attributes
-        attributes = @@documents.map(&:attributes).map(&:keys).flatten.uniq
-        if RUBY_VERSION <= '1.8.7'
-          attributes.map(&:to_s).sort.map(&:to_sym)
-        else
-          attributes.sort
-        end
+        @@documents.map(&:attributes).map(&:keys).flatten.uniq.sort
       end
     end
   end
