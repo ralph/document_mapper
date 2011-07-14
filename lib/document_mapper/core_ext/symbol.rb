@@ -6,4 +6,10 @@ class Symbol
       end
     OPERATORS
   end
+  
+  unless method_defined?(:"<=>")
+    def <=>(other)
+      self.to_s <=> other.to_s
+    end
+  end
 end
