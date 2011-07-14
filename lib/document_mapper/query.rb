@@ -6,12 +6,8 @@ module DocumentMapper
     end
 
     def where(constraints_hash)
-      differentiator = lambda { |key, value| key.is_a? Selector }
-      selector_hash = constraints_hash.select(&differentiator)
-      if RUBY_VERSION <= '1.8.7'
-        selector_hash = Hash.new(selector_hash.flatten)
-      end
-      symbol_hash = constraints_hash.reject &differentiator
+      selector_hash = constraints_hash.reject { |key, value| !key.is_a? Selector }
+      symbol_hash = constraints_hash.reject { |key, value| key.is_a? Selector }
       symbol_hash.each do |attribute, value|
         selector = Selector.new(:attribute => attribute, :operator => 'equal')
         selector_hash.update({ selector => value })
