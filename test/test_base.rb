@@ -1,3 +1,5 @@
+require 'rubygems'
+require 'bundler/setup'
 require 'set'
 require 'minitest/spec'
 MiniTest::Unit.autorun

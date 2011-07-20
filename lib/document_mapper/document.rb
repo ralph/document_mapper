@@ -26,7 +26,7 @@ module DocumentMapper
 
       def reload
         self.reset
-        self.directory = @@directory
+        self.directory = @@directory.path
       end
 
       def from_file(file_path)
@@ -47,7 +47,7 @@ module DocumentMapper
         self.reset
         @@directory = Dir.new File.expand_path(new_directory)
         @@directory.each do |file|
-          next if file[0] == '.'
+          next if file[0,1] == '.'
           self.from_file [@@directory.path, file].join('/')
         end
       end
@@ -55,7 +55,7 @@ module DocumentMapper
       def select(options = {})
         documents = @@documents.dup
         options[:where].each do |selector, selector_value|
-          documents.select! do |document|
+          documents = documents.select do |document|
             next unless document.attributes.has_key? selector.attribute
             document_value = document.send(selector.attribute)
             operator = OPERATOR_MAPPING[selector.operator]
@@ -66,10 +66,12 @@ module DocumentMapper
         if options[:order_by].present?
           order_attribute = options[:order_by].keys.first
           asc_or_desc = options[:order_by].values.first
-          documents.select! do |document|
+          documents = documents.select do |document|
             document.attributes.include? order_attribute
           end
-          documents.sort_by! { |document| document.send order_attribute }
+          documents = documents.sort_by do |document|
+            document.send order_attribute
+          end
           documents.reverse! if asc_or_desc == :desc
         end
 

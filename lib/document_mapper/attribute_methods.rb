@@ -3,10 +3,10 @@ module DocumentMapper
     module Read
       extend ActiveSupport::Concern
 
-      included do
-        # Undefine id so it can be used as an attribute name
-        undef_method(:id) if method_defined?(:id)
-      end
+      # included do
+      #   # Undefine id so it can be used as an attribute name
+      #   undef_method(:id) if method_defined?(:id)
+      # end
 
       module ClassMethods
         def define_read_method(attr_name)
