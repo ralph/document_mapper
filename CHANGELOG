@@ -1,5 +1,6 @@
 Version 0.1.5:
 * bugfix: Allow offsets higher than the number of documents (Clinton R. Nixon)
+* Ruby 1.8.7 compatibility (petebrowne)
 
 Version 0.1.4:
 * add to_html method for documents. Depends on Tilt.
