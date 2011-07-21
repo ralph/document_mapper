@@ -10,7 +10,7 @@ module DocumentMapper
 
     attr_accessor :attributes, :content
 
-    included do
+    def initialize()
       @@documents = []
     end
 

@@ -2,7 +2,7 @@ require 'test_base'
 include DocumentMapper
 
 describe MyDocument do
-  before do
+  after do
     MyDocument.reset
   end
 
