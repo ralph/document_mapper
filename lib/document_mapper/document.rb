@@ -10,16 +10,15 @@ module DocumentMapper
 
     attr_accessor :attributes, :content
 
-    included do
-      @@documents = []
-    end
-
     def ==(other_document)
       return false unless other_document.is_a? Document
       self.file_path == other_document.file_path
     end
 
     module ClassMethods
+
+      @@documents = []
+
       def reset
         @@documents = []
       end
