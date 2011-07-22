@@ -48,8 +48,8 @@ h3. Date recognition
 
 You can either set the date of a document in the YAML front matter, or you can use the file name, if you want to. A file named @2010-08-07-test-document-file.textile@ will return a date like this:
 
-<pre><code>doc.date                     # => #<Date: 2010-08-08 (4910833/2,0,2299161)>
-doc.date.to_s                # => "2010-08-08"
+<pre><code>doc.date                     # => #<Date: 2010-08-07 (4910833/2,0,2299161)>
+doc.date.to_s                # => "2010-08-07"
 doc.year                     # => 2010
 doc.month                    # => 08
 doc.day                      # => 07
