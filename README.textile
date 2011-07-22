@@ -23,12 +23,12 @@ I like Ruby.
 
 In order to access the values in the front matter, you have to create a class that includes @DocumentMapper@. 
 
-<pre><code>require 'document_mapper'
+```ruby
+require 'document_mapper'
 class MyDocument
   include DocumentMapper::Document
 end
-</code></pre>
-
+```
 
 h3. Initializing single documents
 
