@@ -119,8 +119,9 @@ MyDocument.order_by(:title => :desc).all # Order by title attribute, descending
 
 Chaining works with all available query methods, e.g.:
 
-<pre><code>MyDocument.where(:status => 'published').where(:title => 'Some title').limit(2).all
-</code></pre>
+```ruby
+MyDocument.where(:status => 'published').where(:title => 'Some title').limit(2).all
+```
 
 
 ### Reloading
