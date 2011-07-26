@@ -10,6 +10,7 @@ Document mapper is an object mapper for plain text documents. The documents look
 Documents look somehow like this. The part between the ```---```s is the YAML front matter. After the second ```---```, there is one blank line, followed by the content of the file. All items in the YAML front matter and the content are accessible by Document Mapper.
 
 ```yaml
+---
 id: 1
 title: Ruby is great
 tags: [programming, software]
