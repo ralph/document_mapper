@@ -136,6 +136,6 @@ MyDocument.reload
 
 ## Author
 
-Written by [Ralph von der Heyden](http://rvdh.de). Don't hesitate to contact me if you have any further questions.
+Written by [Ralph von der Heyden](http://www.rvdh.de). Don't hesitate to contact me if you have any further questions.
 
 Follow me on [Twitter](http://twitter.com/ralph)
