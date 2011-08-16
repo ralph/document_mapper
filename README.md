@@ -1,6 +1,6 @@
 # Document Mapper
 
-![http://travis-ci.org/ralph/document_mapper](http://travis-ci.org/ralph/document_mapper.png)
+[![Build Status](https://secure.travis-ci.org/ralph/document_mapper.png)](http://travis-ci.org/ralph/document_mapper)
 
 Document mapper is an object mapper for plain text documents. The documents look like the ones used in [jekyll](http://github.com/mojombo/jekyll), [toto](http://github.com/cloudhead/toto) or [Serious](http://github.com/colszowka/serious). They consist of a preambel written in YAML (also called YAML front matter), and some content in the format you prefer, e.g. Textile. This enables you to write documents in your favorite editor and access the content and metadata in your Ruby scripts.
 
