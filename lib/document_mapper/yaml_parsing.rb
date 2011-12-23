@@ -26,6 +26,14 @@ module DocumentMapper
         end
       end
 
+      if !self.attributes.has_key? :slug
+        begin
+          match = attributes[:file_name_without_extension].match(/(\d{4}-\d{1,2}-\d{1,2}[-_])?(.*)/)
+          self.attributes[:slug] = match[2]
+        rescue NoMethodError => err
+        end
+      end
+
       if self.attributes.has_key? :date
         self.attributes[:year] = self.attributes[:date].year
         self.attributes[:month] = self.attributes[:date].month

@@ -74,6 +74,40 @@ describe MyDocument do
       end
     end
 
+    describe 'specifying the slug of the document' do
+      describe 'when a slug is defined in the document' do
+        before do
+          @document = MyDocument.from_file('test/documents/2010-08-08-test-document-file.textile')
+        end
+
+        it 'should return the slug defined in the document' do
+          assert_equal 'fancy-test', @document.slug
+        end
+      end
+
+      describe 'when no slug is defined in the document' do
+        describe 'when the file name contains no date' do
+          before do
+            @document = MyDocument.from_file('test/documents/document_with_date_in_yaml.textile')
+          end
+
+          it 'should get the slug from the file name' do
+            assert_equal 'document_with_date_in_yaml', @document.slug
+          end
+        end
+
+        describe 'when the file name contains a date' do
+          before do
+            @document = MyDocument.from_file('test/documents/2010-08-09-another-test-document.textile')
+          end
+
+          it 'should get the slug from the file name, without the date' do
+            assert_equal 'another-test-document', @document.slug
+          end
+        end
+      end
+    end
+
     describe 'loading a documents directory' do
       it 'should load all the documents in that directory' do
         MyDocument.directory = 'test/documents'
@@ -315,6 +349,7 @@ EOS
         id
         month
         seldom_attribute
+        slug
         special_attribute
         status
         tags

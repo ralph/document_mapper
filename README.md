@@ -59,6 +59,11 @@ doc.month                    # => 08
 doc.day                      # => 07
 ```
 
+### Slug recognition
+
+Similar to the date recognition described above, Document Mapper will automatically populate a document's `slug` attribute using its file name (unless `slug` is already given in the document front matter).
+
+For example, a file named `2011-12-24-happy-xmas.textile` will not only have its date set to `2011-12-24`, but its `slug` set to `happy-xmas`.
 
 ### Working with directories
 
