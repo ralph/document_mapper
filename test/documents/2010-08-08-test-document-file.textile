@@ -1,6 +1,7 @@
 ---
 id: 1
 title: Some fancy title
+slug: fancy-test
 tags: [ruby]
 status: :published
 ---
