@@ -11,7 +11,7 @@ module DocumentMapper
     attr_accessor :attributes, :content
 
     included do
-      @@documents = []
+      @documents = []
     end
 
     def ==(other_document)
@@ -21,12 +21,12 @@ module DocumentMapper
 
     module ClassMethods
       def reset
-        @@documents = []
+        @documents = []
       end
 
       def reload
         self.reset
-        self.directory = @@directory.path
+        self.directory = @directory.path
       end
 
       def from_file(file_path)
@@ -38,22 +38,22 @@ module DocumentMapper
             :file_path => File.expand_path(file_path)
           }
           document.read_yaml
-          @@documents << document
+          @documents << document
         end
       end
 
       def directory=(new_directory)
         raise FileNotFoundError unless File.directory?(new_directory)
         self.reset
-        @@directory = Dir.new File.expand_path(new_directory)
-        @@directory.each do |file|
+        @directory = Dir.new File.expand_path(new_directory)
+        @directory.each do |file|
           next if file[0,1] == '.'
-          self.from_file [@@directory.path, file].join('/')
+          self.from_file [@directory.path, file].join('/')
         end
       end
 
       def select(options = {})
-        documents = @@documents.dup
+        documents = @documents.dup
         options[:where].each do |selector, selector_value|
           documents = documents.select do |document|
             next unless document.attributes.has_key? selector.attribute
@@ -95,19 +95,19 @@ module DocumentMapper
       end
 
       def all
-        @@documents
+        @documents
       end
 
       def first
-        @@documents.first
+        @documents.first
       end
 
       def last
-        @@documents.last
+        @documents.last
       end
 
       def attributes
-        @@documents.map(&:attributes).map(&:keys).flatten.uniq.sort
+        @documents.map(&:attributes).map(&:keys).flatten.uniq.sort
       end
     end
   end
