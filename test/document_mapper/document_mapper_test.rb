@@ -336,6 +336,7 @@ EOS
     end
   end
 
+<<<<<<< HEAD
   describe 'loading a document with invalid yaml' do
     it 'should raise with a decent error message' do
       @file_path = File.expand_path('test/documents/invalid_yaml.textile')
@@ -353,6 +354,16 @@ EOS
 
     def teardown
       File.delete @file_path
+    end
+  end
+
+  describe 'multiple document classes' do
+    it 'can serve multiple document directories' do
+      MyDocument.directory = 'test/documents'
+      MyOtherDocument.directory = 'test/other_documents'
+
+      assert_equal 4, MyDocument.all.count
+      assert_equal 1, MyOtherDocument.all.count
     end
   end
 
