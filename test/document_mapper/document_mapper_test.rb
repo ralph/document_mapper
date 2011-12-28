@@ -336,6 +336,26 @@ EOS
     end
   end
 
+  describe 'loading a document with invalid yaml' do
+    it 'should raise with a decent error message' do
+      @file_path = File.expand_path('test/documents/invalid_yaml.textile')
+      File.open(@file_path, 'w') do |f|
+        f.write <<-EOS
+---
+title: Look: Invalid YAML!
+---
+
+This is definitely gonna blow up.
+EOS
+      end
+      proc { MyDocument.reload }.must_raise(DocumentMapper::YamlParsingError, "Unable to parse YAML of #{@file_path}")
+    end
+
+    def teardown
+      File.delete @file_path
+    end
+  end
+
   def sample_file_path_1
     'test/documents/2010-08-08-test-document-file.textile'
   end
