@@ -336,6 +336,16 @@ EOS
     end
   end
 
+  describe 'multiple document classes' do
+    it 'can serve multiple document directories' do
+      MyDocument.directory = 'test/documents'
+      MyOtherDocument.directory = 'test/other_documents'
+
+      assert_equal 4, MyDocument.all.count
+      assert_equal 1, MyOtherDocument.all.count
+    end
+  end
+
   def sample_file_path_1
     'test/documents/2010-08-08-test-document-file.textile'
   end
