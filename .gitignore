@@ -4,3 +4,4 @@
 .rvmrc
 Gemfile.lock
 tags
+.rbenv*
