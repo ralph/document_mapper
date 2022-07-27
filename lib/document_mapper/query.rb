@@ -3,6 +3,9 @@ module DocumentMapper
     def initialize(model)
       @model = model
       @where = {}
+      @limit = nil
+      @offset = nil
+      @order_by = nil
     end
 
     def where(constraints_hash)

@@ -24,7 +24,7 @@ module DocumentMapper
           match = attributes[:file_name].match(/(\d{4})-(\d{1,2})-(\d{1,2}).*/)
           year, month, day = match[1].to_i, match[2].to_i, match[3].to_i
           self.attributes[:date] = Date.new(year, month, day)
-        rescue NoMethodError => err
+        rescue NoMethodError
         end
       end
 
