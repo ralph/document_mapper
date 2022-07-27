@@ -8,7 +8,7 @@ module DocumentMapper
 
       if @content =~ /^(---\s*\n.*?\n?)^(---\s*$\n?)/m
         @content = @content[($1.size + $2.size)..-1]
-        self.attributes.update(yaml_load($1, file_path).symbolize_keys)
+        self.attributes.update(yaml_load($1, file_path).transform_keys(&:to_sym))
       end
 
       file_name = File.basename(file_path)
