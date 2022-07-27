@@ -1,4 +1,6 @@
 module DocumentMapper
+  class YamlParsingError < StandardError; end
+
   module YamlParsing
     def read_yaml
       file_path = self.attributes[:file_path]
@@ -6,7 +8,7 @@ module DocumentMapper
 
       if @content =~ /^(---\s*\n.*?\n?)^(---\s*$\n?)/m
         @content = @content[($1.size + $2.size)..-1]
-        self.attributes.update(YAML.load($1).symbolize_keys)
+        self.attributes.update(yaml_load($1, file_path).symbolize_keys)
       end
 
       file_name = File.basename(file_path)
@@ -34,6 +36,12 @@ module DocumentMapper
 
       self.class.define_attribute_methods self.attributes.keys
       self.attributes.keys.each { |attr| self.class.define_read_method attr }
+    end
+
+    def yaml_load(yaml, file)
+      YAML.load(yaml)
+    rescue ArgumentError, Psych::SyntaxError
+      raise YamlParsingError, "Unable to parse YAML of #{file}"
     end
   end
 end
