@@ -8,15 +8,15 @@ module DocumentMapper
   PERMITTED_CLASSES = [
     Date,
     Symbol
-  ]
+  ].freeze
 
   module YamlParsing
     def read_yaml
       file_path = attributes[:file_path]
-      @content = File.read(file_path)
+      file_content = File.read(file_path)
 
-      if @content =~ /^(---\s*\n.*?\n?)^(---\s*$\n?)/m
-        @content = @content[(Regexp.last_match(1).size + Regexp.last_match(2).size)..]
+      if file_content =~ /^(---\s*\n.*?\n?)^(---\s*$\n?)/m
+        @content = file_content[(Regexp.last_match(1).size + Regexp.last_match(2).size)..]
         attributes.update(yaml_load(Regexp.last_match(1), file_path).transform_keys(&:to_sym))
       end
 

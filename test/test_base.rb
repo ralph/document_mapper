@@ -3,8 +3,8 @@
 require 'rubygems'
 require 'bundler/setup'
 require 'set'
-require 'minitest/spec'
-MiniTest::Unit.autorun
+require 'minitest/autorun'
+MiniTest.autorun
 
 lib_dir = File.join(File.dirname(__FILE__), '..', 'lib')
 $LOAD_PATH.unshift lib_dir unless $LOAD_PATH.include?(lib_dir)

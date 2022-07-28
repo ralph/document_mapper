@@ -22,6 +22,7 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency('activesupport')
   s.add_runtime_dependency('rake')
   s.add_runtime_dependency('tilt')
+  s.add_development_dependency('debug')
   s.add_development_dependency('minitest')
   s.add_development_dependency('RedCloth')
   s.add_development_dependency('rubocop')

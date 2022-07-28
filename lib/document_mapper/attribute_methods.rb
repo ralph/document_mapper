@@ -12,8 +12,9 @@ module DocumentMapper
 
       module ClassMethods
         def define_read_method(attr_name)
-          access_code = "attributes[:#{attr_name}]"
-          generated_attribute_methods.module_eval("def #{attr_name}; #{access_code}; end", __FILE__, __LINE__)
+          generated_attribute_methods.redefine_method(attr_name) do
+            attributes[attr_name]
+          end
         end
       end
     end
