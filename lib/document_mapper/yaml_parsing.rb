@@ -5,6 +5,11 @@ require 'date'
 module DocumentMapper
   class YamlParsingError < StandardError; end
 
+  PERMITTED_CLASSES = [
+    Date,
+    Symbol
+  ]
+
   module YamlParsing
     def read_yaml
       file_path = attributes[:file_path]
@@ -45,7 +50,7 @@ module DocumentMapper
     end
 
     def yaml_load(yaml, file)
-      YAML.load(yaml)
+      YAML.safe_load(yaml, permitted_classes: PERMITTED_CLASSES)
     rescue ArgumentError, Psych::SyntaxError
       raise YamlParsingError, "Unable to parse YAML of #{file}"
     end

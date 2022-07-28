@@ -8,8 +8,14 @@
 # where the inspected file is and continue its way up to the root directory.
 #
 # See https://docs.rubocop.org/rubocop/configuration
+AllCops:
+  TargetRubyVersion: 2.6
 Style/Documentation:
   Enabled: false
 Naming/VariableNumber:
   Enabled: true
   EnforcedStyle: snake_case
+Metrics/BlockLength:
+  Enabled: false
+Metrics/MethodLength:
+  Enabled: false
