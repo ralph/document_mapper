@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DocumentMapper
   module AttributeMethods
     module Read

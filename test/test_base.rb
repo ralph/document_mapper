@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rubygems'
 require 'bundler/setup'
 require 'set'
@@ -19,9 +21,11 @@ class MyOtherDocument
   include DocumentMapper::Document
 end
 
-module MiniTest::Assertions
-  def assert_equal_set exp, act, msg = nil
-    msg = message(msg) { "Expected #{mu_pp(exp)}, not #{mu_pp(act)}" }
-    assert(exp.to_set == act.to_set, msg)
+module MiniTest
+  module Assertions
+    def assert_equal_set(exp, act, msg = nil)
+      msg = message(msg) { "Expected #{mu_pp(exp)}, not #{mu_pp(act)}" }
+      assert(exp.to_set == act.to_set, msg)
+    end
   end
 end

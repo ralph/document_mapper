@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'test_base'
 include DocumentMapper
 
@@ -9,16 +11,14 @@ describe Symbol do
   end
 
   it 'should not raise an error on valid operators' do
-    begin
-      :my_attribute.equal
-      :my_attribute.gt
-      :my_attribute.gte
-      :my_attribute.in
-      :my_attribute.lt
-      :my_attribute.lte
-    rescue StandardError => e
-      assert false, 'Calling operator on symbol raised error'
-    end
+    :my_attribute.equal
+    :my_attribute.gt
+    :my_attribute.gte
+    :my_attribute.in
+    :my_attribute.lt
+    :my_attribute.lte
+  rescue StandardError
+    assert false, 'Calling operator on symbol raised error'
   end
 
   it 'should raise an error on invalid operators' do

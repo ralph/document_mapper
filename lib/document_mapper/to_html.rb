@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'tilt'
 
 module DocumentMapper
@@ -7,4 +9,3 @@ module DocumentMapper
     end
   end
 end
-

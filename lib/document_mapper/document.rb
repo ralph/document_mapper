@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'active_model'
 
 module DocumentMapper
@@ -14,9 +16,10 @@ module DocumentMapper
       @documents = []
     end
 
-    def ==(other_document)
-      return false unless other_document.is_a? Document
-      self.file_path == other_document.file_path
+    def ==(other)
+      return false unless other.is_a? Document
+
+      file_path == other.file_path
     end
 
     module ClassMethods
@@ -25,17 +28,16 @@ module DocumentMapper
       end
 
       def reload
-        self.reset
+        reset
         self.directory = @directory.path
       end
 
       def from_file(file_path)
-        if !File.exist? file_path
-          raise FileNotFoundError
-        end
-        self.new.tap do |document|
+        raise FileNotFoundError unless File.exist? file_path
+
+        new.tap do |document|
           document.attributes = {
-            :file_path => File.expand_path(file_path)
+            file_path: File.expand_path(file_path)
           }
           document.read_yaml
           @documents << document
@@ -44,11 +46,13 @@ module DocumentMapper
 
       def directory=(new_directory)
         raise FileNotFoundError unless File.directory?(new_directory)
-        self.reset
+
+        reset
         @directory = Dir.new File.expand_path(new_directory)
         @directory.each do |file|
-          next if file[0,1] == '.'
-          self.from_file [@directory.path, file].join('/')
+          next if file[0, 1] == '.'
+
+          from_file [@directory.path, file].join('/')
         end
       end
 
@@ -56,7 +60,8 @@ module DocumentMapper
         documents = @documents.dup
         options[:where].each do |selector, selector_value|
           documents = documents.select do |document|
-            next unless document.attributes.has_key? selector.attribute
+            next unless document.attributes.key? selector.attribute
+
             document_value = document.send(selector.attribute)
             operator = OPERATOR_MAPPING[selector.operator]
             document_value.send operator, selector_value

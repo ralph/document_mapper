@@ -1,41 +1,47 @@
+# frozen_string_literal: true
+
+require 'date'
+
 module DocumentMapper
   class YamlParsingError < StandardError; end
 
   module YamlParsing
     def read_yaml
-      file_path = self.attributes[:file_path]
+      file_path = attributes[:file_path]
       @content = File.read(file_path)
 
       if @content =~ /^(---\s*\n.*?\n?)^(---\s*$\n?)/m
-        @content = @content[($1.size + $2.size)..-1]
-        self.attributes.update(yaml_load($1, file_path).transform_keys(&:to_sym))
+        @content = @content[(Regexp.last_match(1).size + Regexp.last_match(2).size)..]
+        attributes.update(yaml_load(Regexp.last_match(1), file_path).transform_keys(&:to_sym))
       end
 
       file_name = File.basename(file_path)
       extension = File.extname(file_path)
-      self.attributes.update({
-        :file_name => file_name,
-        :extension => extension.sub(/^\./, ''),
-        :file_name_without_extension => File.basename(file_path, extension)
-      })
+      attributes.update({
+                          file_name: file_name,
+                          extension: extension.sub(/^\./, ''),
+                          file_name_without_extension: File.basename(file_path, extension)
+                        })
 
-      if !self.attributes.has_key? :date
+      unless attributes.key? :date
         begin
           match = attributes[:file_name].match(/(\d{4})-(\d{1,2})-(\d{1,2}).*/)
-          year, month, day = match[1].to_i, match[2].to_i, match[3].to_i
-          self.attributes[:date] = Date.new(year, month, day)
+          year = match[1].to_i
+          month = match[2].to_i
+          day = match[3].to_i
+          attributes[:date] = ::Date.new(year, month, day)
         rescue NoMethodError
         end
       end
 
-      if self.attributes.has_key? :date
-        self.attributes[:year] = self.attributes[:date].year
-        self.attributes[:month] = self.attributes[:date].month
-        self.attributes[:day] = self.attributes[:date].day
+      if attributes.key? :date
+        attributes[:year] = attributes[:date].year
+        attributes[:month] = attributes[:date].month
+        attributes[:day] = attributes[:date].day
       end
 
-      self.class.define_attribute_methods self.attributes.keys
-      self.attributes.keys.each { |attr| self.class.define_read_method attr }
+      self.class.define_attribute_methods attributes.keys
+      attributes.each_key { |attr| self.class.define_read_method attr }
     end
 
     def yaml_load(yaml, file)
