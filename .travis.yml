@@ -1,4 +1,0 @@
-script: "bundle exec rake"
-rvm:
-  - 2.7.6
-  - 3.1.2
