@@ -9,7 +9,7 @@ class Symbol
     OPERATORS
   end
 
-  unless method_defined?(:"<=>")
+  unless method_defined?(:<=>)
     def <=>(other)
       to_s <=> other.to_s
     end

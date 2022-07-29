@@ -1,0 +1,5 @@
+---
+title: Look: Invalid YAML!
+---
+
+This is definitely gonna blow up.

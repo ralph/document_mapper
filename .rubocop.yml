@@ -10,6 +10,7 @@
 # See https://docs.rubocop.org/rubocop/configuration
 AllCops:
   TargetRubyVersion: 2.6
+  NewCops: enable
 Style/Documentation:
   Enabled: false
 Naming/VariableNumber:

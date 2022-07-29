@@ -5,6 +5,7 @@ include DocumentMapper
 
 describe MyDocument do
   before do
+    MyDocument.directory = 'test/documents'
     MyDocument.reset
   end
 
@@ -281,16 +282,14 @@ describe MyDocument do
   describe 'reloading the Document class' do
     it 'should discover new documents' do
       @file_path = 'test/documents/2011-04-26-new-stuff.textile'
-      File.open(@file_path, 'w') do |f|
-        f.write <<~DOCUMENT
-          ---
-          id: 5
-          title: Some brand new document
-          ---
+      File.write(@file_path, <<~DOCUMENT)
+        ---
+        id: 5
+        title: Some brand new document
+        ---
 
-          Very new stuff.
-        DOCUMENT
-      end
+        Very new stuff.
+      DOCUMENT
       MyDocument.reload
       assert_equal [1, 2, 3, 4, 5].sort, MyDocument.all.map(&:id).sort
     end
@@ -340,21 +339,9 @@ describe MyDocument do
 
   describe 'loading a document with invalid yaml' do
     it 'should raise with a decent error message' do
-      @file_path = File.expand_path('test/documents/invalid_yaml.textile')
-      File.open(@file_path, 'w') do |f|
-        f.write <<~DOCUMENT
-          ---
-          title: Look: Invalid YAML!
-          ---
-
-          This is definitely gonna blow up.
-        DOCUMENT
-      end
-      _ { MyDocument.reload }.must_raise(DocumentMapper::YamlParsingError, "Unable to parse YAML of #{@file_path}")
-    end
-
-    def teardown
-      File.delete @file_path
+      _ do
+        MyDocument.directory = 'test/documents_with_invalid_yaml'
+      end.must_raise(DocumentMapper::YamlParsingError, "Unable to parse YAML of #{@file_path}")
     end
   end
 
